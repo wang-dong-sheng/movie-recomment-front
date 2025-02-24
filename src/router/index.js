@@ -23,6 +23,8 @@ const movieList = resolve => require(['../views/movieList.vue'], resolve);
 // eslint-disable-next-line global-require,import/no-dynamic-require
 const personList = resolve => require(['../views/personList.vue'], resolve);
 
+const admin = resolve => require(['../views/admin.vue'], resolve);
+
 const router = new Router({
   routes: [
     {
@@ -100,6 +102,11 @@ const router = new Router({
           component: userInfo,
         },
       ],
+    },
+    {
+      path: '/admin',
+      component: admin,
+      name:"admin"
     },
   ],
 });

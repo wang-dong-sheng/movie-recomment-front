@@ -161,7 +161,7 @@ export default {
         })
         .then((res) => {
           if (res.status === 200) {
-            this.comment = res.data.data.commentList;
+            this.comment = res.data.data.records;
           }
         })
         .catch((e) => {
@@ -182,14 +182,17 @@ export default {
       }
       submitComment.movieId = localStorage.getItem('movieId');
       const user = JSON.parse(localStorage.getItem('user'));
-      submitComment.commentId = Date.parse(new Date());
+      //评论id后端创建，自增
+      // submitComment.commentId = Date.parse(new Date());
       submitComment.userName = user.username;
       submitComment.userMd = user.userMd;
+      // submitComment.userId = user.id;
       submitComment.userAvatar = user.userAvatar;
       submitComment.movieName = this.movie.name;
       submitComment.votes = 0;
       submitComment.content = this.commentInput;
       submitComment.commentTime = Date.parse(new Date());
+      alert(submitComment.userId);
       fetch
         .submitComment(submitComment)
         .then((res) => {

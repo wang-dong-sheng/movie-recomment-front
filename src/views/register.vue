@@ -12,14 +12,14 @@
         <el-form-item prop="checkPass">
           <el-input type="password" v-model="registerInfo.checkPass" auto-complete="off" placeholder="确认密码"></el-input>
         </el-form-item>
-        <el-form-item prop="phone">
+        <!-- <el-form-item prop="phone">
           <el-input v-model.number="registerInfo.phone" placeholder="手机号"></el-input>
-        </el-form-item>
-        <el-form-item prop="code">
+        </el-form-item> -->
+        <!-- <el-form-item prop="code">
           <el-input v-model.number="registerInfo.code" style="width: 270px;padding-right: 10px;"
                     placeholder="验证码"></el-input>
           <el-button @click="sendCode">{{this.msg}}</el-button>
-        </el-form-item>
+        </el-form-item> -->
 <!--        <el-form-item>-->
 <!--           <span style="float: left">请选择喜欢的电影类型：</span>-->
 <!--        </el-form-item>-->

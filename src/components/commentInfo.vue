@@ -69,11 +69,12 @@ export default {
           page: this.count,
           size: 12,
           userMd: user.userMd,
+          userId: user.id,
           content: '',
         })
         .then((res) => {
           if (res.status === 200) {
-            this.comment = res.data.data.commentList;
+            this.comment = res.data.data.records;
             this.isShow = true;
           }
         })
