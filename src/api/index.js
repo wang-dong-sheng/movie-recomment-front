@@ -38,6 +38,9 @@ export default {
   getCommentInfo() {
     return `${host}/comment/list`;
   },
+  deleteComments() {
+    return `${host}/comment/deleteComments`;
+  },
   submitComment() {
     return `${host}/comment/submit`;
   },

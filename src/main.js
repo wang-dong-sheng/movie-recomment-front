@@ -3,8 +3,8 @@
 import 'vue2-animate/dist/vue2-animate.min.css';
 import Vue from 'vue';
 import ElementUI from 'element-ui';
-import App from './App';
-import router from './router/index';
+import App from './App.vue';
+import router from './router';
 import axios from './http';
 import store from './store/store';
 // eslint-disable-next-line import/first

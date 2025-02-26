@@ -34,6 +34,12 @@ export default {
     headers.token = localStorage.getItem('token');
     return axios.post(api.submitComment(), JSON.stringify(info), { headers });
   },
+  deleteComments(ids) {
+    return axios.delete(api.deleteComments(), {
+      data: ids,  // 将 ID 列表作为请求体发送
+      headers
+    });
+  },
   putMovie(info) {
     headers.token = localStorage.getItem('token');
     return axios.post(api.putMovie(), JSON.stringify(info), { headers });
