@@ -11,6 +11,15 @@ export default {
   getUserInfo() {
     return `${host}/user/userInfo`;
   },
+  getAllUser(){
+    return `${host}/user/getAllUser`;
+  },
+  filterUsers(){
+    return `${host}/user/filterUsers`;
+  },
+  deleteUsers(){
+    return `${host}/user/deleteUsers`;
+  },
   getMovie() {
     return `${host}/movie/list`;
   },

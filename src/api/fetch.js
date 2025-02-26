@@ -76,4 +76,16 @@ export default {
   getMessage() {
     return axios.get(api.getMessage(), { headers });
   },
+  getAllUser(){
+    return axios.get(api.getAllUser(),{headers})
+  },
+  deleteUsers(ids) {
+    return axios.delete(api.deleteUsers(), {
+      data: ids,  // 将 ID 列表作为请求体发送
+      headers
+    });
+  },
+  filterUsers(userQueryRequest) {
+    return axios.post(api.filterUsers(), userQueryRequest,{ headers });
+  },
 };
