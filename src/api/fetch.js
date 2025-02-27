@@ -26,6 +26,26 @@ export default {
   getMovieInfo(id) {
     return axios.get(api.getMovieInfo(), { params: { movieId: id } }, { headers });
   },
+  filterMovies(movieQueryRequest){
+    return   axios.post(api.filterMovies(), movieQueryRequest,{ headers });
+  },
+  deleteMovies(ids){
+    return  axios.delete(api.deleteMovies(), {
+      data: ids,  // 将 ID 列表作为请求体发送
+      headers
+    });
+  },
+  upOrDownMovies(movieUpVo){
+    return   axios.post(api.upOrDownMovies(), movieUpVo,{ headers });
+  },
+  //新增电影
+  addMovie(movie){
+    return   axios.post(api.addMovie(), movie,{ headers });
+  },
+  //修改movie
+  updateMovie(movie){
+    return   axios.post(api.updateMovie(), movie,{ headers });
+  },
   getCommentList(info) {
     headers.token = localStorage.getItem('token');
     return axios.post(api.getCommentInfo(), JSON.stringify(info), { headers });

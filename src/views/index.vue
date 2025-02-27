@@ -63,15 +63,15 @@
       <h3 style="color: #888;font-weight: 400">--- ABOUT ---</h3></div>
     <div class="aboutus">
       <div id="aboutusInfo">
-        <p style="font-size: 200%">基于大数据的电影推荐系统</p>
+        <p style="font-size: 200%">协同过滤算法的电影推荐系统</p>
         <p style="font-size: 200%">为您推荐最好的电影，带给你最佳的观影体验！</p>
       </div>
     </div>
     <div class="division"><h3>联系我们</h3>
       <h3 style="color: #888;font-weight: 400">--- CONTACT ---</h3></div>
     <div class="footer">
-      <a href="https://github.com/pq-dong"><img src="../assets/github.png"><span>https://github.com/pq-dong</span></a>
-      <a href="https://github.com/erxuesun"><img src="../assets/github.png"><span>https://github.com/erxuesun</span></a>
+      <a href="https://github.com/wang-dong-sheng/movie-recomment-front"><img src="../assets/github.png"><span>https://github.com/wang-dong-sheng/movie-recomment-front</span></a>
+      <a href="https://github.com/wang-dong-sheng/movie-recomment-backended"><img src="../assets/github.png"><span>https://github.com/wang-dong-sheng/movie-recomment-backended</span></a>
     </div>
   </div>
 </template>

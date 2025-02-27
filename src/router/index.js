@@ -150,6 +150,15 @@ const routes = [
           title: '评论管理',
           icon: 'el-icon-chat-line-square'
         }
+      },
+      {
+        path: 'movie-management',
+        name: 'MovieManagement',
+        component: () => import('../views/admin/MovieManagement.vue'),
+        meta: {
+          title: '电影管理',
+          icon: 'el-icon-film'
+        }
       }
     ]
   },

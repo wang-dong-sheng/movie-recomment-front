@@ -40,6 +40,10 @@
               <i class="el-icon-chat-line-square"></i>
               <span>评论管理</span>
             </el-menu-item>
+            <el-menu-item index="/admin/movie-management">
+              <i class="el-icon-film"></i>
+              <span>电影管理</span>
+            </el-menu-item>
           </el-submenu>
         </el-menu>
       </el-aside>

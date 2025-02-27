@@ -59,6 +59,22 @@ export default {
   getMovieTag() {
     return `${host}/movie/tag`;
   },
+  filterMovies(){
+    return `${host}/movie/filterMovies`;
+  },
+  deleteMovies(){
+    return `${host}/movie/deleteMovies`;
+  },
+  //上映或下架电影
+  upOrDownMovies(){
+    return `${host}/movie/isUp`;
+  },
+  addMovie(){
+    return `${host}/movie/addMovie`;
+  },
+  updateMovie(){
+    return `${host}/movie/updateMovie`;
+  },
   sendCode() {
     return `${host}/user/code`;
   },
