@@ -5,8 +5,9 @@
         <span @click="redirect(1)" class="tab">首页</span>
         <span @click="redirect(2)" class="tab" v-if="!isShow">个人中心</span>
         <span class="tab"><el-input placeholder="搜索电影" style="width:18rem" v-model="content"
-                                                 @change="getMovie(content)"><i slot="prefix"
-                                                                              class="el-input__icon el-icon-search"></i></el-input></span>
+                                   @keyup.enter="getMovie(content)">
+          <el-button slot="append" icon="el-icon-search" @click="getMovie(content)"></el-button>
+        </el-input></span>
       </div>
       <div>
         <span @click="redirect(3)" class="tab">
@@ -75,10 +76,24 @@ export default {
       this.$router.push({ name: 'register' });
     },
     getMovie(value) {
-      if (value !== null) {
-        localStorage.setItem('content', value);
+      if (value) {
+        const params = {
+          name: value,
+          id: '',
+          dateRange: []
+        };
+        fetch.filterMovies(params)
+          .then(res => {
+            if (res.status === 200) {
+              localStorage.setItem('content', value);
+              this.$router.push({ name: 'movieList' });
+            }
+          })
+          .catch(e => {
+            console.log(e);
+            this.$message.error('搜索失败');
+          });
       }
-      this.$router.push({ name: 'movieList' });
     },
     logout() {
       fetch
@@ -90,6 +105,9 @@ export default {
               type: 'success',
             });
             store.commit(types.LOGOUT);
+            localStorage.removeItem('token');
+            localStorage.removeItem('content');
+            this.isShow = true;
             this.$router.push({ name: 'login' });
           }
         })

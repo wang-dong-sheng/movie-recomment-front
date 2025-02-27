@@ -21,12 +21,14 @@
         </div>
       </div>
     </div>
-    <div>
-      <el-button class="editt" @click="prePage()">上一页</el-button>
-      <el-button type="primary" class="editt">{{this.count}}</el-button>
-      <el-button class="editt" >{{this.count+1}}</el-button>
-      <el-button class="editt" >{{this.count+2}}</el-button>
-      <el-button class="editt" @click="nextPage()">下一页</el-button>
+    <div class="pagination-container">
+      <el-pagination
+        @current-change="handleCurrentChange"
+        :current-page="count"
+        :page-size="12"
+        layout="prev, pager, next"
+        :total="total">
+      </el-pagination>
     </div>
   </div>
 </template>
@@ -41,10 +43,25 @@ export default {
       count: 1,
       tags: [],
       isShow: false,
+      total: 0,
+      searchContent: '',
     };
   },
   mounted() {
     this.getMovie();
+  },
+  watch: {
+    '$route'(to, from) {
+      if (to.name === 'movieList') {
+        const content = localStorage.getItem('content');
+        if (content !== null) {
+          this.searchContent = content;
+          localStorage.removeItem('content');
+          this.count = 1;
+          this.getMovie();
+        }
+      }
+    }
   },
   computed: {
     isLogin() {
@@ -54,41 +71,35 @@ export default {
   methods: {
     selectTag(tag) {
       this.tags.push(tag);
+      this.count = 1;
       this.getMovie();
     },
     resetTag() {
       this.tags = [];
+      this.count = 1;
       this.getMovie();
     },
-    prePage() {
-      if (this.count > 1) {
-        this.count = this.count - 1;
-      }
+    handleCurrentChange(val) {
+      this.count = val;
       this.getMovie();
-    },
-    nextPage() {
-      this.count = this.count + 1;
-      this.getMovie();
-    },
-    getContent() {
-      // content为从首页电影搜索栏带过来的搜索条件
-      const c = localStorage.getItem('content');
-      if (c !== null) {
-        localStorage.removeItem('content');
-        return c;
-      }
-      return '';
     },
     getMovie() {
-      fetch.getMovieList({
-        page: this.count,
-        size: 12,
+      const searchTerm = localStorage.getItem('content');
+      if (searchTerm !== null) {
+        this.searchContent = searchTerm;
+        localStorage.removeItem('content');
+      }
+
+      fetch.filterMovies({
+        current: this.count,
+        pageSize: 12,
         tags: this.tags,
-        content: this.getContent(),
+        name: this.searchContent,
       }).then((res) => {
         if (res.status === 200) {
           if (res.data.code === 0) {
-            this.movieList = res.data.data.movieList;
+            this.movieList = res.data.data.records;
+            this.total = res.data.data.total;
           }
         }
       });

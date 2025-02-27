@@ -28,7 +28,6 @@
     <div class="cardContain">
       <div class="wrapper-card">
         <div class="card" v-for="(item, key) in movieList" :key="key">
-<!--          引入资源防止403-->
           <meta name="referrer" content="no-referrer"/>
           <img :src="item.cover" class="image" @click="getMovieDetail(item.movieId)">
           <div>
@@ -36,6 +35,16 @@
           </div>
         </div>
       </div>
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-sizes="[12, 24, 36, 48]"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+        style="margin: 20px 0; text-align: center;">
+      </el-pagination>
     </div>
 
     <!--演员资源-->
@@ -101,12 +110,16 @@ export default {
         { movieId: 1309166, name: '零号嫌疑犯', cover: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2529453201.jpg' }],
       isLogin: !!store.state.token,
       isShow: false,
+      currentPage: 1,
+      pageSize: 12,
+      total: 0,
+      searchForm: {},
     };
   },
 
   mounted() {
     window.addEventListener('scroll', this.handler);
-    this.getMovie();
+    this.fetchMovieList();
     this.getPerson();
     this.getRecommend();
   },
@@ -150,13 +163,38 @@ export default {
     },
 
     getMovie() {
-      fetch.getMovieHigh()
+      fetch.filterMovies()
         .then((res) => {
           if (res.status === 200) {
             if (res.data.code === 0) {
               this.movieList = res.data.data.movieList;
             }
           }
+        });
+    },
+    fetchMovieList() {
+      const params = {
+        current: this.currentPage,
+        pageSize: this.pageSize,
+        ...this.searchForm
+      }
+      fetch.filterMovies(params)
+        .then((res) => {
+          if (res.data.code === 0) {
+            this.movieList = res.data.data.records !== null ? res.data.data.records : this.movieList;
+            this.total = res.data.data.total;
+          } else {
+            this.$message({
+              type: 'warning',
+              message: res.data.description,
+            });
+          }
+        })
+        .catch((err) => {
+          this.$message({
+            type: 'error',
+            message: err,
+          });
         });
     },
 
@@ -174,6 +212,15 @@ export default {
     getMovieDetail(id) {
       localStorage.setItem('movieId', id);
       this.$router.push({ name: 'movieInfo' });
+    },
+
+    handleSizeChange(val) {
+      this.pageSize = val;
+      this.fetchMovieList();
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val;
+      this.fetchMovieList();
     },
   },
 };
