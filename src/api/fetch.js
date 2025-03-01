@@ -60,9 +60,15 @@ export default {
       headers
     });
   },
-  putMovie(info) {
+  //打分
+  setRating(info) {
     headers.token = localStorage.getItem('token');
-    return axios.post(api.putMovie(), JSON.stringify(info), { headers });
+    return axios.post(api.setRating(), JSON.stringify(info), { headers });
+  },
+  //获取打分
+  getRating(info) {
+    headers.token = localStorage.getItem('token');
+    return axios.post(api.getRating(), JSON.stringify(info), { headers });
   },
   getPersonInfo(id) {
     return axios.get(api.getPersonInfo(), { params: { personId: id } }, { headers });

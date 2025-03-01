@@ -23,13 +23,18 @@
           <p>上映时间：{{movie.releaseDate}}<span>|</span>地区：{{movie.regions}}<span>|</span>语言：{{movie.languages}}</p>
           <p>片长：{{movie.mins}} 分钟</p>
         </div>
-      <div>
-        <span v-show="!hasSet" v-for="n in 10">
-              <el-button class="scorec" @click="setScore(n)">{{n}}</el-button>
-              <span>&ensp;</span>
-            </span>
-        <span v-show="hasSet">你已经为此电影打过分！！！</span>
-        <el-button type="primary" v-if="true" class="combtn" plain>点击右侧为电影打分</el-button>
+      <div class="rating-container">
+        <div>
+          <span v-if="!hasRated" v-for="n in 10" :key="n">
+            <el-button class="scorec" @click="submitRating(n)">{{n}}</el-button>
+            <span>&ensp;</span>
+          </span>
+          <span v-if="hasRated">
+            我的为给电影打：{{ currentRating }} 分
+            <el-button type="primary" class="scorec" @click="showRatingButtons">重新评分</el-button>
+          </span>
+          <el-button type="primary" v-if="!hasRated" class="combtn" plain>点击右侧为电影打分</el-button>
+        </div>
       </div>
       </el-card>
       <el-card class="moviecard">
@@ -83,42 +88,85 @@ export default {
       comment: {},
       isShow: false,
       isLogin: false,
-      hasSet: false,
+      hasRated: false,
       commentInput: '',
       count: 1,
+      currentRating: null,
     };
   },
   mounted() {
     this.getMovieDetail();
     this.getCommentDetail();
+    this.checkExistingRating();
   },
   computed: {
   },
   methods: {
-    setScore(score) {
-      this.hasSet = true;
+    checkExistingRating() {
       const user = JSON.parse(localStorage.getItem('user'));
-      this.movie.score = (score + this.movie.score) / 2;
-      fetch
-        .putMovie({
-          movieId: this.movie.movieId,
-          userId: user.id,
-          rating: this.movie.score,
-        })
-        .then((res) => {
-          if (res.code === 0) {
-            // this.getMovieDetail();
+      if (!user) return;
 
-          } else if (res.code === 500) {
-            this.$message({
-              message: '请先登录',
-              type: 'warning',
-            });
-          }
-        })
-        .catch((e) => {
-          console.log(e);
+      const movieId = localStorage.getItem('movieId');
+      fetch.getRating({
+        userId: user.id,
+        movieId: movieId
+      })
+      .then(res => {
+        if (res.data && res.data.data && res.data.data.rating) {
+          this.hasRated = true;
+          this.currentRating = res.data.data.rating;
+        } else {
+          this.hasRated = false;
+          this.currentRating = null;
+        }
+      })
+      .catch(err => {
+        console.error('获取评分信息失败:', err);
+      });
+    },
+    submitRating(score) {
+      const user = JSON.parse(localStorage.getItem('user'));
+      if (!user) {
+        this.$message({
+          message: '请先登录后再评分',
+          type: 'warning'
         });
+        return;
+      }
+
+      const movieId = localStorage.getItem('movieId');
+      fetch.setRating({
+        movieId: movieId,
+        userId: user.id,
+        rating: score
+      })
+      .then(res => {
+        if (res.data.code === 0) {
+          this.hasRated = true;
+          this.currentRating = score;
+          this.$message({
+            message: '评分成功！',
+            type: 'success'
+          });
+          this.getMovieDetail();
+        } else {
+          this.$message({
+            message: res.msg || '评分失败，请稍后重试',
+            type: 'warning'
+          });
+        }
+      })
+      .catch(err => {
+        console.error('评分失败:', err);
+        this.$message({
+          message: '评分失败，请稍后重试',
+          type: 'error'
+        });
+      });
+    },
+    showRatingButtons() {
+      this.hasRated = false;
+      this.currentRating = null;
     },
     prePage() {
       if (this.count > 1) {
@@ -186,7 +234,7 @@ export default {
       // submitComment.commentId = Date.parse(new Date());
       submitComment.userName = user.username;
       submitComment.userMd = user.userMd;
-      // submitComment.userId = user.id;
+      submitComment.userId = user.id;
       submitComment.userAvatar = user.userAvatar;
       submitComment.movieName = this.movie.name;
       submitComment.votes = 0;
@@ -510,5 +558,31 @@ export default {
 
   .editt {
     margin: 0px auto auto 0px;
+  }
+
+  .rating-container {
+    margin: 20px 0;
+  }
+
+  .rating-buttons {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 15px;
+  }
+
+  .current-rating {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .rating-text {
+    font-size: 16px;
+    color: #409EFF;
+    font-weight: bold;
+  }
+
+  .scorec {
+    min-width: 40px;
   }
 </style>

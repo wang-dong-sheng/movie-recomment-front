@@ -44,8 +44,8 @@ export default {
   submitComment() {
     return `${host}/comment/submit`;
   },
-  putMovie() {
-    return `${host}/movie/update`;
+  setRating() {
+    return `${host}/movie/setRating`;
   },
   getPerson() {
     return `${host}/person/list`;
@@ -100,4 +100,7 @@ export default {
   getMessage() {
     return `${host}/message/user/get`;
   },
+  getRating(){
+    return `${host}/movie/getRating`;
+  }
 };

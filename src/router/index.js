@@ -168,6 +168,24 @@ const router = new Router({
   routes
 });
 
+// 添加全局前置守卫
+router.beforeEach((to, from, next) => {
+  // 从 store 中获取用户角色信息
+  const userRole = store.state.user.userRole;
+  
+  // 如果要访问 admin 相关页面
+  if (to.path.startsWith('/admin')) {
+    // 检查是否是管理员
+    if (userRole === 'admin') {
+      next(); // 是管理员，允许访问
+    } else {
+      next('/'); // 不是管理员，重定向到首页
+    }
+  } else {
+    next(); // 非 admin 页面，直接放行
+  }
+});
+
 export default router;
 
 // 同步 localstorage 信息到 store
