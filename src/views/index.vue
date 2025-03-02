@@ -29,7 +29,7 @@
       <div class="wrapper-card">
         <div class="card" v-for="(item, key) in movieList" :key="key">
           <meta name="referrer" content="no-referrer"/>
-          <img :src="item.cover" class="image" @click="getMovieDetail(item.movieId)">
+          <img :src="item.cover" class="image" @click="getMovieDetail(item.id)">
           <div>
             <p style="white-space: pre-wrap;">{{item.name}}    </p>
           </div>

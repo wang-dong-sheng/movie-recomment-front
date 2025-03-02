@@ -110,7 +110,7 @@ const routes = [
         path: 'dashboard',
         name: 'Dashboard',
         component: () => import('../views/admin/Dashboard.vue'),
-        meta: { 
+        meta: {
           title: '系统首页',
           icon: 'el-icon-house'
         }
@@ -173,10 +173,10 @@ router.beforeEach((to, from, next) => {
   // Get user from localStorage
   const userStr = localStorage.getItem('user');
   const user = userStr ? JSON.parse(userStr) : null;
-  
+
   // Check if route is in admin section
   const isAdminRoute = to.path.startsWith('/admin');
-  
+
   if (isAdminRoute) {
     // Only allow admin users to access admin routes
     if (user && user.userRole === 'admin') {
