@@ -168,6 +168,35 @@ const router = new Router({
   routes
 });
 
+// Add navigation guard for permission control
+router.beforeEach((to, from, next) => {
+  // Get user from localStorage
+  const userStr = localStorage.getItem('user');
+  const user = userStr ? JSON.parse(userStr) : null;
+  
+  // Check if route is in admin section
+  const isAdminRoute = to.path.startsWith('/admin');
+  
+  if (isAdminRoute) {
+    // Only allow admin users to access admin routes
+    if (user && user.userRole === 'admin') {
+      next();
+    } else {
+      // Show permission error notification
+      Vue.prototype.$message({
+        message: '您没有权限访问管理员页面',
+        type: 'error',
+        duration: 3000
+      });
+      // Redirect non-admin users to home page
+      next('/');
+    }
+  } else {
+    // For non-admin routes, allow access
+    next();
+  }
+});
+
 export default router;
 
 // 同步 localstorage 信息到 store

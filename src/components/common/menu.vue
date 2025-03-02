@@ -8,8 +8,10 @@
                                    @keyup.enter="getMovie(content)">
           <el-button slot="append" icon="el-icon-search" @click="getMovie(content)"></el-button>
         </el-input></span>
+       
       </div>
       <div>
+        <router-link v-if="isAdmin" to="/admin" class="tab">管理后台</router-link>
         <span @click="redirect(3)" class="tab">
           <i style="margin-right:0.3rem" @click="redirect(3)">
             </i>更多演员...
@@ -56,6 +58,13 @@ export default {
   mounted() {
     if (localStorage.getItem('token') !== null) {
       this.isShow = false;
+    }
+  },
+  computed: {
+    isAdmin() {
+      const userStr = localStorage.getItem('user');
+      const user = userStr ? JSON.parse(userStr) : null;
+      return user && user.userRole === 'admin';
     }
   },
   methods: {

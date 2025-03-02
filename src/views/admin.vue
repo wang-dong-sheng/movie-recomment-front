@@ -70,12 +70,12 @@
             <el-dropdown>
               <span class="user-info">
                 <img :src="userAvatar" class="user-avatar"/>
-                <span>{{ userName }}</span>
+                <span class="username">{{ user.username }}</span>
               </span>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>个人信息</el-dropdown-item>
-                <el-dropdown-item>修改密码</el-dropdown-item>
-                <el-dropdown-item @click="handleLogout">退出登录</el-dropdown-item>
+                <el-dropdown-item @click.native="goToUserInfo" class="tab">个人信息</el-dropdown-item>
+                <el-dropdown-item @click.native="goToHome">返回电影首页</el-dropdown-item>
+                <el-dropdown-item @click.native="handleLogout">退出登录</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </div>
@@ -91,6 +91,7 @@
 </template>
 
 <script>
+import fetch from "../api/fetch";
 export default {
   name: 'AdminLayout',
   data() {
@@ -100,6 +101,16 @@ export default {
       collapseIcon: 'el-icon-s-fold',
       userAvatar: '', // 用户头像
       userName: '', // 用户名
+      user: JSON.parse(localStorage.getItem("user") || '{}'), // 解析 JSON 字符串
+    }
+  },
+  created() {
+    // 在组件创建时获取用户信息
+    if (!this.user.userName) {
+      this.getUserInfo();
+    } else {
+      this.userAvatar = this.user.userAvatar;
+      this.userName = this.user.userName;
     }
   },
   computed: {
@@ -107,13 +118,16 @@ export default {
       // 根据当前路由获取标题
       const route = this.$route.matched[this.$route.matched.length - 1]
       return route.meta.title || ''
-    }
+    },
   },
   methods: {
     handleCollapse() {
       this.isCollapse = !this.isCollapse
       this.asideWidth = this.isCollapse ? '64px' : '200px'
       this.collapseIcon = this.isCollapse ? 'el-icon-s-unfold' : 'el-icon-s-fold'
+    },
+    goToHome() {
+      this.$router.push('/')
     },
     handleLogout() {
       this.$confirm('确认退出登录?', '提示', {
@@ -125,12 +139,34 @@ export default {
         localStorage.removeItem('token')
         this.$router.push('/login')
       }).catch(() => {})
-    }
+    },
+    getUserInfo() {
+      fetch
+        .getUserInfo(localStorage.getItem('token'))
+        .then((res) => {
+          if (res.data.code === 0) {
+            this.user = res.data.data !== null ? res.data.data : this.user;
+            this.user.userTags = JSON.parse(this.user.userTags);
+            this.userAvatar = this.user.userAvatar;
+            this.userName = this.user.userName;
+          } else {
+            this.$message({
+              type: 'warning',
+              message: res.data.description,
+            });
+          }
+        })
+        .catch((err) => {
+          this.$message({
+            type: 'error',
+            message: err,
+          });
+        });
+    },
+    goToUserInfo() {
+      this.$router.push('/userInfo');
+    },
   },
-  created() {
-    // 获取用户信息
-    this.getUserInfo()
-  }
 }
 </script>
 
@@ -222,5 +258,20 @@ export default {
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
   cursor: pointer;
   z-index: 100;
+}
+
+.username {
+  color: #1890ff;
+  font-size: 14px;
+  font-weight: 500;
+  margin-left: 8px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background-color: rgba(24, 144, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.username:hover {
+  background-color: rgba(24, 144, 255, 0.2);
 }
 </style>

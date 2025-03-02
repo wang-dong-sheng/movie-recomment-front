@@ -12,5 +12,12 @@ export default {
   components: {
     'my-menu': menu,
   },
+  computed: {
+    isAdmin() {
+      const userStr = localStorage.getItem('user');
+      const user = userStr ? JSON.parse(userStr) : null;
+      return user && user.userRole === 'admin';
+    }
+  }
 };
 </script>
