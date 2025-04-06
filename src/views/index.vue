@@ -16,7 +16,7 @@
         <div class="card" v-for="(item, key) in recommendList" :key="key">
           <!--          引入资源防止403-->
           <meta name="referrer" content="no-referrer"/>
-          <img :src="item.cover" class="image" @click="getMovieDetail(item.movieId)">
+          <img :src="item.cover" class="image" @click="getMovieDetail(item.id)">
           <div>
             <p style="white-space: pre-wrap;">{{item.name}}    </p>
           </div>
@@ -199,14 +199,32 @@ export default {
     },
 
     getRecommend() {
-      fetch.getRecommend()
-        .then((res) => {
-          if (res.status === 200) {
-            if (res.data.code === 0) {
-              this.recommendList = res.data.data;
+      try {
+        const userInfo = JSON.parse(localStorage.getItem('user'));
+        if (!userInfo || !userInfo.id) {
+          console.log('用户信息不存在');
+          return;
+        }
+        
+        const movieRecommendVo = {
+          userId: Number(userInfo.id), // 确保是数字类型
+          type: 'USER' // 枚举值通常是大写
+        }
+        
+        fetch.getRecommend(movieRecommendVo)
+          .then((res) => {
+            if (res.status === 200) {
+              if (res.data.code === 0) {
+                this.recommendList = res.data.data;
+              }
             }
-          }
-        });
+          })
+          .catch(error => {
+            console.error('获取推荐失败:', error);
+          });
+      } catch (error) {
+        console.error('解析用户信息失败:', error);
+      }
     },
 
     getMovieDetail(id) {

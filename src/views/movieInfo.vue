@@ -25,7 +25,7 @@
         </div>
       <div class="rating-container">
         <div>
-          <span v-if="!hasRated" v-for="n in 10" :key="n">
+          <span v-if="!hasRated" v-for="n in 5" :key="n">
             <el-button class="scorec" @click="submitRating(n)">{{n}}</el-button>
             <span>&ensp;</span>
           </span>
@@ -37,43 +37,60 @@
         </div>
       </div>
       </el-card>
-      <el-card class="moviecard">
-        <div class="movieintroduce">电影内容</div>
-        <div class="moviecontent">
-          <p>{{movie.storyline}}</p>
-        </div>
-      </el-card>
-      <el-card class="moviecard">
-        <div class="movieintroduce">电影评论</div>
-        <div class="newsContain">
-          <div class="temp">
-            <!--        @click="personDetail(item.id)-->
-            <el-input placeholder="登录后才可以评论哟~"  v-model="commentInput" maxlength="50" v-show="!isLogin" disabled type="textarea" autosize style="margin-top: 20px">
-            </el-input>
-            <el-input placeholder="请输入内容"  v-model="commentInput" maxlength="50" v-show="isLogin" type="textarea" autosize style="margin-top: 20px">
-            </el-input>
-            <el-button @click="postComment" class="combtn2" plain size="small">评论</el-button>
-            <el-button @click="clearComment" class="combtn2" plain size="small">清除</el-button>
-            <div class="newsItem" v-for="(item, key) in comment" :key="key">
-              <div class="picContain" ontouchstart="this.classList.toggle('hover');">
-                <meta name="referrer" content="no-referrer"/>
-                <img :src=item.userAvatar height="75" width="75">
+      <!-- 现有的电影内容卡片 -->
+            <el-card class="moviecard">
+              <div class="movieintroduce">电影内容</div>
+              <div class="moviecontent">
+                <p>{{movie.storyline}}</p>
+              </div>
+            </el-card>
+            
+            <!-- 新增推荐卡片 -->
+            <el-card class="moviecard">
+              <div class="movieintroduce">猜你喜欢</div>
+              <div class="recommend-container">
+                <div class="recommend-list">
+                  <div class="recommend-item" v-for="(item, key) in recommendList" :key="key">
+                    <meta name="referrer" content="no-referrer"/>
+                    <img :src="item.cover" class="recommend-image" @click="getMovieDetail(item.id)">
+                    <p class="recommend-title">{{item.name}}</p>
+                  </div>
+                </div>
+              </div>
+            </el-card>
+      
+      <!-- 现有的评论卡片 -->
+            <el-card class="moviecard">
+              <div class="movieintroduce">电影评论</div>
+              <div class="newsContain">
+                <div class="temp">
+                  <!--        @click="personDetail(item.id)-->
+                  <el-input placeholder="登录后才可以评论哟~"  v-model="commentInput" maxlength="50" v-show="!isLogin" disabled type="textarea" autosize style="margin-top: 20px">
+                  </el-input>
+                  <el-input placeholder="请输入内容"  v-model="commentInput" maxlength="50" v-show="isLogin" type="textarea" autosize style="margin-top: 20px">
+                  </el-input>
+                  <el-button @click="postComment" class="combtn2" plain size="small">评论</el-button>
+                  <el-button @click="clearComment" class="combtn2" plain size="small">清除</el-button>
+                  <div class="newsItem" v-for="(item, key) in comment" :key="key">
+                    <div class="picContain" ontouchstart="this.classList.toggle('hover');">
+                      <meta name="referrer" content="no-referrer"/>
+                      <img :src=item.userAvatar height="75" width="75">
+                    </div>
+                    <div>
+                      <p style="white-space: pre-wrap; color: #66b1ff">用户：{{item.userName}}    赞同：{{item.votes}}     时间：{{item.commentTime}}</p>
+                      <p style="margin-top:25px">{{item.content}}</p>
+                    </div>
+                  </div>
+                </div>
               </div>
               <div>
-                <p style="white-space: pre-wrap; color: #66b1ff">用户：{{item.userName}}    赞同：{{item.votes}}     时间：{{item.commentTime}}</p>
-                <p style="margin-top:25px">{{item.content}}</p>
+                <el-button class="editt" @click="prePage()">上一页</el-button>
+                <el-button type="primary" class="editt">{{this.count}}</el-button>
+                <el-button class="editt" >{{this.count+1}}</el-button>
+                <el-button class="editt" >{{this.count+2}}</el-button>
+                <el-button class="editt" @click="nextPage()">下一页</el-button>
               </div>
-            </div>
-          </div>
-        </div>
-        <div>
-          <el-button class="editt" @click="prePage()">上一页</el-button>
-          <el-button type="primary" class="editt">{{this.count}}</el-button>
-          <el-button class="editt" >{{this.count+1}}</el-button>
-          <el-button class="editt" >{{this.count+2}}</el-button>
-          <el-button class="editt" @click="nextPage()">下一页</el-button>
-        </div>
-      </el-card>
+            </el-card>
     </div>
   </div>
 </template>
@@ -92,12 +109,14 @@ export default {
       commentInput: '',
       count: 1,
       currentRating: null,
+      recommendList: [], // 添加推荐列表数据
     };
   },
   mounted() {
     this.getMovieDetail();
     this.getCommentDetail();
     this.checkExistingRating();
+    this.getRecommend(); // 添加获取推荐的调用
   },
   computed: {
   },
@@ -201,8 +220,8 @@ export default {
       const movieId = localStorage.getItem('movieId');
       fetch
         .getCommentList({
-          page: this.count,
-          size: 12,
+          current: this.count,
+          pageSize: 12,
           movieId,
           userId: '',
           content: '',
@@ -240,7 +259,7 @@ export default {
       submitComment.votes = 0;
       submitComment.content = this.commentInput;
       submitComment.commentTime = Date.parse(new Date());
-      alert(submitComment.userId);
+    
       fetch
         .submitComment(submitComment)
         .then((res) => {
@@ -270,6 +289,34 @@ export default {
     },
     viewMovie(url) {
       window.open(url);
+    },
+    getRecommend() {
+      try {
+        const userInfo = JSON.parse(localStorage.getItem('user'));
+        if (!userInfo || !userInfo.id) {
+          console.log('用户信息不存在');
+          return;
+        }
+        
+        const movieRecommendVo = {
+          userId: Number(userInfo.id),
+          type: 'CONTENT'
+        }
+        
+        fetch.getRecommend(movieRecommendVo)
+          .then((res) => {
+            if (res.status === 200) {
+              if (res.data.code === 0) {
+                this.recommendList = res.data.data;
+              }
+            }
+          })
+          .catch(error => {
+            console.error('获取推荐失败:', error);
+          });
+      } catch (error) {
+        console.error('解析用户信息失败:', error);
+      }
     },
   },
 };

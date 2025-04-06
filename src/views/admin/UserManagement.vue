@@ -118,7 +118,9 @@
         fetch.filterUsers(params)
           .then((res) => {
             if (res.data.code === 0) {
+
               this.userList = res.data.data.records !== null ? res.data.data.records : this.userList;
+              this.total=res.data.data.total;
             } else {
               this.$message({
                 type: 'warning',

@@ -13,9 +13,9 @@ export default {
   getMovie() {
     return axios.get(api.getMovie(), { params: { size: 12 } }, { headers });
   },
-  getRecommend() {
-    const info = localStorage.getItem('user');
-    return axios.post(api.getRecommend(), info, { headers });
+  getRecommend(movieRecommendVo) {
+
+    return axios.post(api.getRecommend(), movieRecommendVo, { headers });
   },
   getMovieHigh() {
     return axios.get(api.getMovieHigh(), { headers });

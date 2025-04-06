@@ -5,7 +5,7 @@
       <el-button style="margin-top: 10px" @click="selectTag('科幻')" :disabled="this.tags.indexOf('科幻')!==-1">科幻</el-button>
       <el-button style="margin-top: 10px" @click="selectTag('爱情')" :disabled="this.tags.indexOf('爱情')!==-1">爱情</el-button>
       <el-button style="margin-top: 10px" @click="selectTag('喜剧')" :disabled="this.tags.indexOf('喜剧')!==-1">喜剧</el-button>
-      <el-button style="margin-top: 10px" @click="selectTag('惊悚')" :disabled="this.tags.indexOf('惊悚')!==-1">惊悚</el-button>
+      <el-button style="margin-top: 10px" @click="selectTag('恐怖')" :disabled="this.tags.indexOf('恐怖')!==-1">恐怖</el-button>
       <el-button style="margin-top: 10px" @click="selectTag('犯罪')" :disabled="this.tags.indexOf('犯罪')!==-1">犯罪</el-button>
       <el-button type="primary" style="margin-top: 10px" @click="resetTag()" plain>重置</el-button>
     </div>
@@ -48,6 +48,12 @@ export default {
     };
   },
   mounted() {
+    // 检查是否有搜索内容
+    const searchTerm = localStorage.getItem('content');
+    if (searchTerm !== null) {
+      this.searchContent = searchTerm;
+      localStorage.removeItem('content');
+    }
     this.getMovie();
   },
   watch: {
@@ -78,18 +84,13 @@ export default {
       this.tags = [];
       this.count = 1;
       this.getMovie();
+      this.searchContent='';
     },
     handleCurrentChange(val) {
       this.count = val;
       this.getMovie();
     },
     getMovie() {
-      const searchTerm = localStorage.getItem('content');
-      if (searchTerm !== null) {
-        this.searchContent = searchTerm;
-        localStorage.removeItem('content');
-      }
-
       fetch.filterMovies({
         current: this.count,
         pageSize: 12,

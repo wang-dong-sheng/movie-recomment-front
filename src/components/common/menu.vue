@@ -95,7 +95,11 @@ export default {
           .then(res => {
             if (res.status === 200) {
               localStorage.setItem('content', value);
-              this.$router.push({ name: 'movieList' });
+              if (this.$route.name === 'movieList') {
+                this.$router.go(0);
+              } else {
+                this.$router.push({ name: 'movieList' });
+              }
             }
           })
           .catch(e => {
