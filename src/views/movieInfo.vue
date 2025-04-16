@@ -46,18 +46,8 @@
             </el-card>
             
             <!-- 新增推荐卡片 -->
-            <el-card class="moviecard">
-              <div class="movieintroduce">猜你喜欢</div>
-              <div class="recommend-container">
-                <div class="recommend-list">
-                  <div class="recommend-item" v-for="(item, key) in recommendList" :key="key">
-                    <meta name="referrer" content="no-referrer"/>
-                    <img :src="item.cover" class="recommend-image" @click="getMovieDetail(item.id)">
-                    <p class="recommend-title">{{item.name}}</p>
-                  </div>
-                </div>
-              </div>
-            </el-card>
+            <!-- 将推荐卡片部分修改为 -->
+            <el-card class="moviecard"> <div class="movieintroduce">猜你喜欢</div> <div class="cardContainx"> <div class="wrapper-cardx"> <div class="card" v-for="(item, key) in recommendList" :key="key"> <meta name="referrer" content="no-referrer"/> <img :src="item.cover" class="image" @click="getMovieDetail(item.id)"> <div> <p style="white-space: pre-wrap;">{{item.name}}    </p> </div> </div> </div> </div> </el-card>
       
       <!-- 现有的评论卡片 -->
             <el-card class="moviecard">
@@ -632,4 +622,42 @@ export default {
   .scorec {
     min-width: 40px;
   }
+  .cardContainx {
+  width: 100%;
+  height: 30%;
+  background: #fff;
+}
+
+.wrapper-cardx {
+  width: 1000px;
+  height: 400px;
+  margin: 30px auto auto auto;
+  padding-top: 30px;
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+}
+
+.wrapper-cardx .card {
+  color: #07111B;
+  font-size: 16px;
+  width: 230px;
+  height: 243px;
+  border-radius: 6px;
+  transition: transform 0.3s;
+}
+
+.wrapper-cardx .card:hover {
+  transform: translateY(-5px);
+  transition: 3ms;
+  box-shadow: 5px 5px 10px #888;
+}
+
+.wrapper-cardx .image {
+  border-radius: 6px;
+  width: 100%;
+  height: 200px;
+  margin-bottom: 20px;
+  object-fit: cover;
+}
 </style>
