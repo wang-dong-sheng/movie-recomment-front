@@ -29,15 +29,15 @@
           </el-form-item>
         </el-form>
       </div>
-  
+
       <!-- 表格区域 -->
-      <el-table 
-        :data="userList" 
-        border 
+      <el-table
+        :data="userList"
+        border
         style="width: 100%"
         @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column prop="id" label="用户ID" width="80"></el-table-column>
+        <el-table-column prop="userId" label="用户ID" width="80"></el-table-column>
         <el-table-column prop="userNickname" label="用户名" width="120"></el-table-column>
         <el-table-column prop="sex" label="性别" width="80"></el-table-column>
         <el-table-column prop="phone" label="手机号" width="120"></el-table-column>
@@ -62,7 +62,7 @@
           </template>
         </el-table-column>
       </el-table>
-  
+
       <!-- 分页 -->
       <div class="pagination-container">
         <el-pagination
@@ -77,10 +77,10 @@
       </div>
     </el-card>
   </template>
-  
+
   <script>
   import fetch from '../../api/fetch'
-  
+
   export default {
     name: 'UserManagement',
     data() {
@@ -146,7 +146,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          fetch.deleteUsers([row.id]).then(res => {
+          fetch.deleteUsers([row.userId]).then(res => {
             if (res.data.code === 0) {
               this.$message.success('删除成功');
               this.fetchUserList();
@@ -181,7 +181,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          const userIds = this.selectedUsers.map(user => user.id);
+          const userIds = this.selectedUsers.map(user => user.userId);
           fetch.deleteUsers(userIds).then(res => {
             if (res.data.code === 0) {
               this.$message.success('批量删除成功');
@@ -210,7 +210,7 @@
     }
   }
   </script>
-  
+
   <style scoped>
   .search-area {
     margin-bottom: 20px;

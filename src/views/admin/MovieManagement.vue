@@ -29,9 +29,9 @@
     </div>
 
     <!-- 表格区域 -->
-    <el-table 
-      :data="movieList" 
-      border 
+    <el-table
+      :data="movieList"
+      border
       style="width: 100%"
       @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55"></el-table-column>
@@ -176,7 +176,7 @@ export default {
   data() {
     return {
       searchForm: {
-        id: '',
+        movieId: '',
         name: '',
         dateRange: []
       },
@@ -188,7 +188,7 @@ export default {
       dialogVisible: false,
       isEdit: false,
       movieForm: {
-        id: '',
+        movieId: '',
         name: '',
         directors: '',
         actors: '',
@@ -224,7 +224,7 @@ export default {
     },
     resetSearch() {
       this.searchForm = {
-        id: '',
+        movieId: '',
         name: '',
         dateRange: []
       }
@@ -261,7 +261,7 @@ export default {
       this.$nextTick(() => {
         this.$refs.movieForm && this.$refs.movieForm.resetFields()
         this.movieForm = {
-          id: '',
+          movieId: '',
           name: '',
           directors: '',
           actors: '',
@@ -287,7 +287,7 @@ export default {
       this.$nextTick(() => {
         this.$refs.movieForm && this.$refs.movieForm.resetFields()
         this.movieForm = {
-          id: row.id,
+          movieId: row.movieId,
           name: row.name,
           directors: row.directors,
           actors: row.actors,
@@ -310,7 +310,7 @@ export default {
     handleUpOrDown(row) {
       const isCurrentlyUp = row.isUp === 1;
       const actionText = isCurrentlyUp ? '下架' : '上映';
-      
+
       this.$confirm(`确认${actionText}该电影?`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -318,9 +318,9 @@ export default {
       }).then(() => {
         const params = {
           tag: isCurrentlyUp ? 0 : 1,  // 当前是上映状态时传0表示下架，反之传1表示上映
-          movieId: row.id
+          movieId: row.movieId
         };
-        
+
         fetch.upOrDownMovies(params).then(res => {
           if (res.data.code === 0) {
             this.$message.success(`${actionText}成功`);
@@ -349,7 +349,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        const movieIds = this.selectedMovies.map(movie => movie.id);
+        const movieIds = this.selectedMovies.map(movie => movie.movieId);
         fetch.deleteMovies(movieIds).then(res => {
           if (res.data.code === 0) {
             this.$message.success('批量删除成功');
@@ -375,7 +375,7 @@ export default {
     submitForm() {
       this.$refs.movieForm.validate((valid) => {
         if (valid) {
-          const request = this.isEdit 
+          const request = this.isEdit
             ? fetch.updateMovie(this.movieForm)  // 编辑请求
             : fetch.addMovie(this.movieForm)     // 新增请求
 

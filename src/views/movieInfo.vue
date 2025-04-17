@@ -44,11 +44,11 @@
                 <p>{{movie.storyline}}</p>
               </div>
             </el-card>
-            
+
             <!-- 新增推荐卡片 -->
             <!-- 将推荐卡片部分修改为 -->
             <el-card class="moviecard"> <div class="movieintroduce">猜你喜欢</div> <div class="cardContainx"> <div class="wrapper-cardx"> <div class="card" v-for="(item, key) in recommendList" :key="key"> <meta name="referrer" content="no-referrer"/> <img :src="item.cover" class="image" @click="getMovieDetail(item.id)"> <div> <p style="white-space: pre-wrap;">{{item.name}}    </p> </div> </div> </div> </div> </el-card>
-      
+
       <!-- 现有的评论卡片 -->
             <el-card class="moviecard">
               <div class="movieintroduce">电影评论</div>
@@ -117,7 +117,7 @@ export default {
 
       const movieId = localStorage.getItem('movieId');
       fetch.getRating({
-        userId: user.id,
+        userId: user.userId,
         movieId: movieId
       })
       .then(res => {
@@ -146,7 +146,7 @@ export default {
       const movieId = localStorage.getItem('movieId');
       fetch.setRating({
         movieId: movieId,
-        userId: user.id,
+        userId: user.userId,
         rating: score
       })
       .then(res => {
@@ -243,13 +243,13 @@ export default {
       // submitComment.commentId = Date.parse(new Date());
       submitComment.userName = user.username;
       submitComment.userMd = user.userMd;
-      submitComment.userId = user.id;
+      submitComment.userId = user.userId;
       submitComment.userAvatar = user.userAvatar;
       submitComment.movieName = this.movie.name;
       submitComment.votes = 0;
       submitComment.content = this.commentInput;
       submitComment.commentTime = Date.parse(new Date());
-    
+
       fetch
         .submitComment(submitComment)
         .then((res) => {
@@ -287,12 +287,12 @@ export default {
           console.log('用户信息不存在');
           return;
         }
-        
+
         const movieRecommendVo = {
           userId: Number(userInfo.id),
           type: 'CONTENT'
         }
-        
+
         fetch.getRecommend(movieRecommendVo)
           .then((res) => {
             if (res.status === 200) {

@@ -29,7 +29,7 @@
       <div class="wrapper-card">
         <div class="card" v-for="(item, key) in movieList" :key="key">
           <meta name="referrer" content="no-referrer"/>
-          <img :src="item.cover" class="image" @click="getMovieDetail(item.id)">
+          <img :src="item.cover" class="image" @click="getMovieDetail(item.movieId)">
           <div>
             <p style="white-space: pre-wrap;">{{item.name}}    </p>
           </div>
@@ -205,12 +205,12 @@ export default {
           console.log('用户信息不存在');
           return;
         }
-        
+
         const movieRecommendVo = {
           userId: Number(userInfo.id), // 确保是数字类型
           type: 'USER' // 枚举值通常是大写
         }
-        
+
         fetch.getRecommend(movieRecommendVo)
           .then((res) => {
             if (res.status === 200) {
@@ -228,6 +228,7 @@ export default {
     },
 
     getMovieDetail(id) {
+      alert(id);
       localStorage.setItem('movieId', id);
       this.$router.push({ name: 'movieInfo' });
     },
