@@ -8,13 +8,13 @@
     <div class="newsContain">
       <div class="temp">
         <!--        @click="personDetail(item.id)-->
-        <div class="newsItem" v-for="(item, key) in personList" :key="key" @click="getPersonDetail(item.id, item.name)">
+        <div class="newsItem" v-for="(item, key) in personList" :key="key" @click="getPersonDetail(item.personId, item.name)">
           <div class="picContain" ontouchstart="this.classList.toggle('hover');">
             <meta name="referrer" content="no-referrer"/>
             <img :src=item.avatar height="75" width="75">
           </div>
           <div>
-            <p style="white-space: pre-wrap;">姓名：{{item.name}}          性别：{{item.sex}}          地点：{{item.birthPlace}}       别名：{{item.nameZn}}</p>
+            <p style="white-space: pre-wrap;">姓名：{{item.name}}          性别：{{item.sex}}          地点：{{item.birthPlace}}       别名：{{item.otherName}}</p>
             <p style="margin-top:25px">职业： {{item.profession}}</p>
           </div>
         </div>

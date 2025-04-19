@@ -18,7 +18,7 @@
         <div class="movieintroduce">演员简介</div>
         <div class="movieintroducet">
           <p>星座：{{person.constellation}}</p>
-          <p>中文别名：{{person.nameZn}}</p>
+          <p>中文别名：{{person.otherName}}</p>
           <p>英文别名：{{person.nameEn}}</p>
           <p>职业：{{person.profession}}</p>
         </div>

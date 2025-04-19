@@ -8,7 +8,7 @@ export default {
   userLogin() {
     return `${host}/user/login`;
   },
-  getUserInfo() {
+  updateUserInfo() {
     return `${host}/user/userInfo`;
   },
   getAllUser(){
@@ -23,8 +23,29 @@ export default {
   getMovie() {
     return `${host}/movie/list`;
   },
+    // 基于人的推荐
   getRecommend() {
-    return `${host}/movie/recommend`;
+    return `${host}/movie/recommend/wish`;
+  },
+    // 基于物品的推荐
+  getRecommendByMovieId() {
+    return `${host}/movie/recommend/baseMovie`;
+  },
+  // 混合推荐
+  getHybridRecommendations() {
+    return `${host}/movie/recommend/hybrid`;
+  },
+  // 实时推荐
+  getCurrentTimeMovies(){
+    return `${host}/movie/recommend/currentTime`;
+  },
+  // 热门推荐
+  getHotMovies(){
+    return `${host}/movie/recommend/hot`;
+  },
+  //评分数最多推荐
+  getRateMoreMovies(){
+    return `${host}/movie/recommend/rateMore`;
   },
   getMovieHigh() {
     return `${host}/movie/high`;

@@ -192,8 +192,13 @@ router.beforeEach((to, from, next) => {
       next('/');
     }
   } else {
-    // For non-admin routes, allow access
-    next();
+    // 如果是从其他页面跳转到首页，则在跳转后刷新页面
+    if (to.name === 'index' && from.name !== null) {
+      next();
+      window.location.reload();
+    } else {
+      next();
+    }
   }
 });
 

@@ -281,19 +281,21 @@ export default {
       window.open(url);
     },
     getRecommend() {
+
       try {
         const userInfo = JSON.parse(localStorage.getItem('user'));
-        if (!userInfo || !userInfo.id) {
+        if (!userInfo || !userInfo.userId) {
           console.log('用户信息不存在');
+          alert("1111111111111111111111")
           return;
         }
-
         const movieRecommendVo = {
-          userId: Number(userInfo.id),
+          userId: Number(userInfo.userId),
+          movieId: localStorage.getItem('movieId'),
           type: 'CONTENT'
         }
 
-        fetch.getRecommend(movieRecommendVo)
+        fetch.getRecommendByMovieId(movieRecommendVo)
           .then((res) => {
             if (res.status === 200) {
               if (res.data.code === 0) {
