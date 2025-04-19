@@ -13,9 +13,31 @@ export default {
   getMovie() {
     return axios.get(api.getMovie(), { params: { size: 12 } }, { headers });
   },
-  getRecommend(movieRecommendVo) {
+  // 基于人的推荐
+  getRecommend(recommendVo) {
 
-    return axios.post(api.getRecommend(), movieRecommendVo, { headers });
+    return axios.post(api.getRecommend(), recommendVo, { headers });
+  },
+  // 基于物品的推荐
+  getRecommendByMovieId(recommendVo) {
+
+    return axios.post(api.getRecommendByMovieId(), recommendVo, { headers });
+  },
+  // 混合推荐
+  getHybridRecommendations(recommendVo) {
+    return axios.post(api.getHybridRecommendations(), recommendVo, { headers });
+  },
+  // 实时推荐算
+  getCurrentTimeMovies(recommendVo) {
+    return axios.post(api.getCurrentTimeMovies(), recommendVo, { headers });
+  },
+  //评分数最多推荐
+  getRateMoreMovies(recommendVo){
+    return axios.post(api.getRateMoreMovies(), recommendVo, { headers });
+  },
+  // 热门推荐
+  getHotMovies(recommendVo){
+    return axios.post(api.getHotMovies(), recommendVo, { headers });
   },
   getMovieHigh() {
     return axios.get(api.getMovieHigh(), { headers });
@@ -85,8 +107,8 @@ export default {
   userLogin(info) {
     return axios.post(api.userLogin(), JSON.stringify(info), { headers });
   },
-  getUserInfo(info) {
-    return axios.get(api.getUserInfo(), { params: { token: info } }, { headers });
+  updateUserInfo(info) {
+    return axios.post(api.updateUserInfo(), JSON.stringify(info), { headers });
   },
   sendCode(phone) {
     return axios.get(api.sendCode(), { params: { phone } }, { headers });
