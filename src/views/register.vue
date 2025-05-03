@@ -24,13 +24,13 @@
 <!--           <span style="float: left">请选择喜欢的电影类型：</span>-->
 <!--        </el-form-item>-->
         <el-form-item prop="registerTag">
-          <span style="float: left">请选择喜欢的电影类型：</span>
+<!--          <span style="float: left">请选择喜欢的电影类型：</span>-->
           <br />
           <div class="mutli">
 <!--          <template v-for="prop in tags">-->
-            <dd v-for="op in tags" class="mutli">
-              <input type="checkbox" :value="op" v-model="registerInfo.tags">{{op}}
-            </dd>
+<!--            <dd v-for="op in tags" class="mutli">-->
+<!--              <input type="checkbox" :value="op" v-model="registerInfo.tags">{{op}}-->
+<!--            </dd>-->
           </div>
 <!--          </template>-->
         </el-form-item>
@@ -125,7 +125,7 @@ export default {
   },
 
   mounted() {
-    this.getUserTags();
+    // this.getUserTags();
     this.addAnimation();
   },
 

@@ -106,7 +106,7 @@ export default {
     this.getMovieDetail();
     this.getCommentDetail();
     this.checkExistingRating();
-    this.getRecommend(); // 添加获取推荐的调用
+    this.getRecommendByMovieId(); // 添加获取推荐的调用
   },
   computed: {
   },
@@ -280,17 +280,16 @@ export default {
     viewMovie(url) {
       window.open(url);
     },
-    getRecommend() {
+    getRecommendByMovieId() {
 
       try {
-        const userInfo = JSON.parse(localStorage.getItem('user'));
-        if (!userInfo || !userInfo.userId) {
-          console.log('用户信息不存在');
-          alert("1111111111111111111111")
-          return;
-        }
+        // const userInfo = JSON.parse(localStorage.getItem('user'));
+        // if (!userInfo || !userInfo.userId) {
+        //   console.log('用户信息不存在');
+        //   return;
+        // }
         const movieRecommendVo = {
-          userId: Number(userInfo.userId),
+          // userId: Number(userInfo.userId),
           movieId: localStorage.getItem('movieId'),
           type: 'CONTENT'
         }

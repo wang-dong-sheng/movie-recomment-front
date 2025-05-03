@@ -123,5 +123,8 @@ export default {
   },
   getRating(){
     return `${host}/movie/getRating`;
-  }
+  },
+  getRatedMovieByUserId(){
+    return `${host}/movie/getRatedMovieByUserId`;
+  },
 };

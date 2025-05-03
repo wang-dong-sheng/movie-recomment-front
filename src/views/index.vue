@@ -19,7 +19,7 @@
         </el-menu-item>
         <el-menu-item index="userbased" @click="scrollToSection('userbased')">
           <i class="el-icon-user"></i>
-          <span>基于用户推荐</span>
+          <span>离线推荐-基于用户</span>
         </el-menu-item>
         <el-menu-item index="hot" @click="scrollToSection('hot')">
           <i class="el-icon-star-on"></i>
@@ -51,7 +51,7 @@
           电影推荐系统
         </div>
       </el-header>
-      
+
       <el-main>
         <!-- 轮播图部分 -->
         <div class="indexContain">
@@ -236,9 +236,9 @@
           width="50%">
           <div class="tag-container">
             <el-checkbox-group v-model="selectedTags">
-              <el-checkbox 
-                v-for="tag in allTags" 
-                :key="tag" 
+              <el-checkbox
+                v-for="tag in allTags"
+                :key="tag"
                 :label="tag"
                 border>
                 {{ tag }}
@@ -292,9 +292,9 @@ export default {
       activeMenu: 'realtime', // 当前激活的菜单项
       tagDialogVisible: false,
       allTags: [
-        '剧情', '喜剧', '爱情', '动作', '惊悚', '犯罪', '恐怖', '冒险', 
-        '科幻', '悬疑', '奇幻', '战争', '歌舞', '家庭', '历史', '传记', 
-        '音乐', '古装', '运动', '西部', '黑色电影', '动画', '武侠', 
+        '剧情', '喜剧', '爱情', '动作', '惊悚', '犯罪', '恐怖', '冒险',
+        '科幻', '悬疑', '奇幻', '战争', '歌舞', '家庭', '历史', '传记',
+        '音乐', '古装', '运动', '西部', '黑色电影', '动画', '武侠',
         '同性', '惊栗', '情色', '戏曲', '荒诞', '悬念', '儿童', '记录'
       ],
       selectedTags: [],
@@ -391,12 +391,13 @@ export default {
 
     getRecommend() {
       try {
-        const userInfo = JSON.parse(localStorage.getItem('user'));
-        if (!userInfo || !userInfo.userId) {
 
-          console.log('用户信息不存在');
-          return;
-        }
+        const userInfo = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : " ";
+        // if (!userInfo || !userInfo.userId) {
+
+        //   console.log('用户信息不存在');
+        //   return;
+        // }
         // alert(String(userInfo))
         const movieRecommendVo = {
           userId: userInfo.userId, // 确保是数字类型
@@ -438,11 +439,11 @@ export default {
      // 获取混合推荐
      getHybridRecommendations() {
       try {
-        const userInfo = JSON.parse(localStorage.getItem('user'));
-        if (!userInfo || !userInfo.userId) {
-          console.log('用户信息不存在');
-          return;
-        }
+        const userInfo = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : " ";
+        // if (!userInfo || !userInfo.userId) {
+        //   console.log('用户信息不存在');
+        //   return;
+        // }
         const movieRecommendVo = {
           userId: userInfo.userId,
           username: userInfo.userNickname
@@ -468,11 +469,11 @@ export default {
     // 获取基于用户的推荐
     getUserBasedRecommend() {
       try {
-        const userInfo = JSON.parse(localStorage.getItem('user'));
-        if (!userInfo || !userInfo.userId) {
-          console.log('用户信息不存在');
-          return;
-        }
+        const userInfo = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : " ";
+        // if (!userInfo || !userInfo.userId) {
+        //   console.log('用户信息不存在');
+        //   return;
+        // }
         const movieRecommendVo = {
           userId: userInfo.userId,
           username: userInfo.userNickname,
@@ -498,11 +499,11 @@ export default {
     // 获取热门推荐
     getHotRecommend() {
       try {
-        const userInfo = JSON.parse(localStorage.getItem('user'));
-        if (!userInfo || !userInfo.userId) {
-          console.log('用户信息不存在');
-          return;
-        }
+        const userInfo = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : " ";
+        // if (!userInfo || !userInfo.userId) {
+        //   console.log('用户信息不存在');
+        //   return;
+        // }
         const movieRecommendVo = {
           userId: userInfo.userId,
           username: userInfo.userNickname,
@@ -519,8 +520,10 @@ export default {
           })
           .catch(error => {
             console.error('获取热门推荐失败:', error);
+
           });
       } catch (error) {
+
         console.error('解析用户信息失败:', error);
       }
     },
@@ -528,11 +531,11 @@ export default {
     // 获取评分最多推荐
     getRateMoreRecommend() {
       try {
-        const userInfo = JSON.parse(localStorage.getItem('user'));
-        if (!userInfo || !userInfo.userId) {
-          console.log('用户信息不存在');
-          return;
-        }
+        const userInfo = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : " ";
+        // if (!userInfo || !userInfo.userId) {
+        //   console.log('用户信息不存在');
+        //   return;
+        // }
         const movieRecommendVo = {
           userId: userInfo.userId,
           username: userInfo.userNickname,
@@ -563,7 +566,7 @@ export default {
         const offset = 70; // 设置偏移量
         const elementPosition = element.getBoundingClientRect().top;
         const offsetPosition = elementPosition + window.pageYOffset - offset;
-        
+
         window.scrollTo({
           top: offsetPosition,
           behavior: 'smooth'
@@ -574,7 +577,7 @@ export default {
     // 监听滚动事件，更新当前激活的菜单项
     handleScroll() {
       const sections = ['realtime', 'hybrid', 'userbased', 'hot', 'rated', 'movies', 'actors', 'about'];
-      
+
       for (const sectionId of sections) {
         const element = document.getElementById(sectionId);
         if (element) {
@@ -619,10 +622,10 @@ export default {
           // 更新本地存储中的first标志
           userInfo.first = false;
           localStorage.setItem('user', JSON.stringify(userInfo));
-          
+
           this.$message.success('标签选择成功！');
           this.tagDialogVisible = false;
-          
+
           // 重新加载推荐
           this.getRecommend();
           this.getHybridRecommendations();
@@ -937,7 +940,7 @@ export default {
     .el-aside {
       width: 64px !important;
     }
-    
+
     .el-main {
       margin-left: 64px;
     }

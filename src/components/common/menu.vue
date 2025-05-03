@@ -120,6 +120,7 @@ export default {
             store.commit(types.LOGOUT);
             localStorage.removeItem('token');
             localStorage.removeItem('content');
+            localStorage.removeItem('user');
             this.isShow = true;
             this.$router.push({ name: 'login' });
           }

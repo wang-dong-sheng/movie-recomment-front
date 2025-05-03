@@ -1,63 +1,167 @@
 <template>
   <div>
-    <div class="wrapper">
-      <el-card class="box-card">
-        <div>
-          <el-upload
-            class="avatar-uploader"
-            action="http://movie.pqdong.com:10015/user/avatar"
-            name="avatar"
-            :headers="head"
-            :data="{'userMd': this.list.userMd}"
-            :show-file-list="false"
-            :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload">
-            <img v-if="imageUrl"  class="avatar">
-            <img v-else class="img" :src="setDefault">
-          </el-upload>
-          <span class="username">{{list ? list.username : ''}}</span>
+    <el-container class="main-container">
+      <el-aside
+        :width="asideWidth"
+        style="min-height: 100vh; background-color: #001529"
+      >
+        <!-- Logo区域 -->
+        <div class="logo-container">
+          <span class="logo-text" v-show="!isCollapse">个人中心</span>
         </div>
-      </el-card>
-      <el-tabs type="border-card" tabPosition="left"
-               style="width:1000px;height: 100vh;margin: 14px auto auto auto;position: sticky">
-        <el-tab-pane>
-          <span slot="label">个人信息<i class="el-icon-arrow-right"></i></span>
-          <user :list="list" :imageUrl="imageUrl" class="user"></user>
-        </el-tab-pane>
-        <el-tab-pane>
-          <span slot="label">我的评论<i class="el-icon-arrow-right"></i></span>
-          <comment></comment>
-        </el-tab-pane>
-      </el-tabs>
-    </div>
+
+        <!-- 菜单区域 -->
+        <el-menu
+          :collapse="isCollapse"
+          background-color="#001529"
+          text-color="rgba(255,255,255,0.65)"
+          active-text-color="#fff"
+          :default-active="activeTab"
+        >
+          <el-menu-item index="info" @click="handleTabClick('info')">
+            <i class="el-icon-user"></i>
+            <span slot="title">个人信息</span>
+          </el-menu-item>
+          <el-menu-item index="comments" @click="handleTabClick('comments')">
+            <i class="el-icon-chat-line-square"></i>
+            <span slot="title">我的评论</span>
+          </el-menu-item>
+          <el-menu-item index="rated" @click="handleTabClick('rated')">
+            <i class="el-icon-film"></i>
+            <span slot="title">评分历史</span>
+          </el-menu-item>
+        </el-menu>
+
+        <!-- 添加返回首页按钮到侧边栏底部 -->
+        <div class="home-button" :class="{ 'collapsed': isCollapse }">
+          <el-button 
+            type="text" 
+            @click="goToHome" 
+            class="home-btn"
+          >
+            <i class="el-icon-s-home"></i>
+            <span v-show="!isCollapse">返回首页</span>
+          </el-button>
+        </div>
+      </el-aside>
+
+      <!-- 右侧内容区 -->
+      <el-container class="right-container">
+
+        
+        <!-- 主要内容区 -->
+        <el-main class="content-main">
+          <user v-if="activeTab === 'info'" :list="list" :imageUrl="imageUrl"></user>
+          <comment v-if="activeTab === 'comments'"></comment>
+          <rated-movies v-if="activeTab === 'rated'"></rated-movies>
+        </el-main>
+      </el-container>
+    </el-container>
   </div>
 </template>
 
-<script>/* eslint-disable indent */
+<style scoped>
+.main-container {
+  height: 100vh;
+  overflow: hidden;
+}
 
+.right-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.content-main {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  background-color: #f0f2f5;
+}
+
+/* 自定义滚动条样式 */
+.content-main::-webkit-scrollbar {
+  width: 6px;
+}
+
+.content-main::-webkit-scrollbar-thumb {
+  background-color: #909399;
+  border-radius: 3px;
+}
+
+.content-main::-webkit-scrollbar-track {
+  background-color: #f0f2f5;
+}
+
+/* 添加返回首页按钮样式 */
+.home-button {
+  position: absolute;
+  bottom: 20px;
+  width: 100%;
+  text-align: center;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+
+.home-button.collapsed {
+  padding: 0 8px;
+}
+
+.home-btn {
+  width: 100%;
+  color: rgba(255,255,255,0.65) !important;
+  font-size: 14px;
+  padding: 12px 0;
+  border-radius: 4px;
+}
+
+.home-btn:hover {
+  color: #fff !important;
+  background-color: rgba(255,255,255,0.1);
+}
+
+.home-btn i {
+  margin-right: 5px;
+}
+
+/* 修改 el-aside 样式以支持绝对定位 */
+.el-aside {
+  position: relative;
+}
+
+/* 修改头部样式，由于移除了面包屑，简化样式 */
+.el-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background-color: #545c64;
+  padding-left: 20px;
+  height: 60px;
+}
+</style>
+
+<script>
 import fetch from '../api/fetch';
 import Info from '../components/userInfo';
 import CommentInfo from '../components/commentInfo';
+import RatedMovies from './ratedMovies';
 
 export default {
   data() {
     return {
       activeIndex2: '1',
       btnText: '取消',
-      list: {
-        username: '',
-        sex: '',
-        phone: '',
-        userTags: [],
-        userMd: '',
-        userAvatar: '',
-        motto: '',
-      },
+      list: JSON.parse(localStorage.getItem('user')),
       imageUrl: '',
       head: {
         token: localStorage.getItem('token'),
       },
       refresh: 0,
+      // 新增的数据
+      isCollapse: false,
+      asideWidth: '200px',
+      collapseIcon: 'el-icon-s-fold',
+      activeTab: 'info',
     };
   },
   computed: {
@@ -67,6 +171,14 @@ export default {
       }
       return 'http://oimagec6.ydstatic.com/image?id=-4541055657611236390&product=bisheng';
     },
+    currentTabName() {
+      const tabNames = {
+        info: '个人信息',
+        comments: '我的评论',
+        rated: '评分历史'
+      };
+      return tabNames[this.activeTab];
+    }
   },
   mounted() {
     this.getUserInfo();
@@ -80,8 +192,20 @@ export default {
   components: {
     user: Info,
     comment: CommentInfo,
+    RatedMovies,
   },
   methods: {
+    handleCollapse() {
+      this.isCollapse = !this.isCollapse;
+      this.asideWidth = this.isCollapse ? '64px' : '200px';
+      this.collapseIcon = this.isCollapse ? 'el-icon-s-unfold' : 'el-icon-s-fold';
+    },
+    handleTabClick(tab) {
+      this.activeTab = tab;
+    },
+    goToHome() {
+      this.$router.push('/');
+    },
     getUserInfo() {
       fetch
         .getUserInfo(localStorage.getItem('token'))
@@ -106,9 +230,6 @@ export default {
     handleAvatarSuccess(res) {
       this.imageUrl = res.data;
     },
-    getComment() {
-      this.$router.push({ name: 'commentInfo' });
-    },
     beforeAvatarUpload(file) {
       const isJPG = file.type === 'image/jpeg';
       const isLt2M = file.size / 1024 / 1024 < 2;
@@ -125,55 +246,74 @@ export default {
 };
 </script>
 
+<style scoped>
+.logo-container {
+  height: 60px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
 
-<style>
-  html * {
-    padding: 0;
-    margin: 0;
-  }
+.logo-img {
+  width: 40px;
+  height: 40px;
+}
 
-  * {
-    box-sizing: border-box;
-  }
+.logo-text {
+  margin-left: 10px;
+  font-size: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+}
 
-  .box-card {
-    width: 1000px;
-    margin: 14px auto auto auto;
-  }
+.header-right {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
 
-  .img {
-    border-radius: 50%;
-    width: 70px;
-    height: 70px;
-  }
+.el-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+  background-color: #545c64;
+  color: white;
+}
 
-  .el-card .username {
-    float: left;
-    margin-left: 14px;
-    font-size: 21px;
-  }
+.collapse-btn {
+  position: absolute;
+  left: -13px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 26px;
+  height: 26px;
+  line-height: 26px;
+  text-align: center;
+  background-color: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  z-index: 100;
+}
 
-  .avatar-uploader {
-    float: left;
-  }
+.el-menu-item.is-active {
+  background-color: #1890ff !important;
+  border-radius: 5px !important;
+  margin: 4px !important;
+}
 
-  .avatar-uploader .el-upload {
-    border-radius: 50%;
-    width: 70px;
-    height: 70px;
-    margin-bottom: 14px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
+.el-menu-item {
+  margin: 4px !important;
+  height: 40px !important;
+  line-height: 40px !important;
+}
 
-  .avatar-uploader .el-upload:hover {
-    border-color: #409eff;
-  }
-
-  .avatar {
-    width: 5rem;
-    height: 5rem;
-    display: block;
-  }
+.el-main {
+  padding: 20px;
+  background-color: #f0f2f5;
+}
 </style>

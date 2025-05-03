@@ -51,6 +51,10 @@ export default {
   filterMovies(movieQueryRequest){
     return   axios.post(api.filterMovies(), movieQueryRequest,{ headers });
   },
+  // 获取当前用户评分过的电影
+  getRatedMovieByUserId(movieQueryRequest){
+    return   axios.post(api.getRatedMovieByUserId(), movieQueryRequest,{ headers });
+  },
   deleteMovies(ids){
     return  axios.delete(api.deleteMovies(), {
       data: ids,  // 将 ID 列表作为请求体发送
