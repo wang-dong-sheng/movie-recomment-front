@@ -45,8 +45,8 @@ export default {
   getMovieList(info) {
     return axios.post(api.getMovieByTag(), JSON.stringify(info), { headers });
   },
-  getMovieInfo(id) {
-    return axios.get(api.getMovieInfo(), { params: { movieId: id } }, { headers });
+  getMovieInfo(info) {
+    return axios.post(api.getMovieInfo(), JSON.stringify(info), { headers });
   },
   filterMovies(movieQueryRequest){
     return   axios.post(api.filterMovies(), movieQueryRequest,{ headers });
@@ -146,4 +146,7 @@ export default {
   filterUsers(userQueryRequest) {
     return axios.post(api.filterUsers(), userQueryRequest,{ headers });
   },
+  getAnalysis(analysisVo){
+    return axios.post(api.getAnalysis(),analysisVo,{ headers });
+  }
 };

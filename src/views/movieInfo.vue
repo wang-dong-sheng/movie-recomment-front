@@ -189,8 +189,13 @@ export default {
     },
     getMovieDetail() {
       const movieId = localStorage.getItem('movieId');
+      const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : " ";
+
       fetch
-        .getMovieInfo(movieId)
+        .getMovieInfo({
+        movieId: movieId,
+        userId: user.userId,
+      })
         .then((res) => {
           if (res.status === 200) {
             if (res.data.data === null) {

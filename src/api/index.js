@@ -127,4 +127,7 @@ export default {
   getRatedMovieByUserId(){
     return `${host}/movie/getRatedMovieByUserId`;
   },
+  getAnalysis(){
+    return `${host}/movie/analysis`;
+  },
 };

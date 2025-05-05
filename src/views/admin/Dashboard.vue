@@ -31,7 +31,7 @@
               <i class="el-icon-connection"></i>
             </div>
             <h3>技术栈</h3>
-            <p>整合Docker、MySQL、Redis、ES等主流技术</p>
+            <p>整合Spark、Kafka、Redis、ES、MongoDB、SpringBoot等主流技术</p>
           </el-card>
         </el-col>
       </el-row>
@@ -53,7 +53,7 @@ export default {
   name: 'Dashboard',
   data() {
     return {
-      techStack: ['Spring Boot', 'Docker', 'MySQL', 'ElasticSearch', 'Redis', 'Maven']
+      techStack: ['SpringBoot', 'Spark', 'MongoDB', 'ElasticSearch', 'Redis', 'Maven',"Kafka"]
     }
   }
 }
