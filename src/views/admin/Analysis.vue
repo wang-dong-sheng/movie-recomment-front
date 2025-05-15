@@ -10,7 +10,7 @@ import * as echarts from 'echarts'
 import fetch from '@/api/fetch'
 
 export default {
-  name: 'UserInfo',
+  name: 'Analysis',
   data() {
     return {
       analysisData: []

@@ -2,7 +2,7 @@
   <div class="dashboard-container">
     <div class="welcome-section">
       <h1 class="title">欢迎使用电影推荐系统</h1>
-      <div class="subtitle">基于Spring Boot的大数据电影推荐系统</div>
+      <div class="subtitle">基于协同过滤的电影推荐系统</div>
     </div>
 
     <div class="features-container">

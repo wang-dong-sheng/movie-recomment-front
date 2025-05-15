@@ -127,7 +127,7 @@ const routes = [
       {
         path: 'user-info',
         name: 'UserInfo',
-        component: () => import('../views/admin/UserInfo.vue'),
+        component: () => import('../views/admin/Analysis.vue'),
         meta: {
           title: '用户信息',
           icon: 'el-icon-info'

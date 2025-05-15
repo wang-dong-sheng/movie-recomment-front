@@ -423,7 +423,7 @@ export default {
     },
 
     getMovieDetail(id) {
-      alert(id);
+      // alert(id);
       localStorage.setItem('movieId', id);
       this.$router.push({ name: 'movieInfo' });
     },

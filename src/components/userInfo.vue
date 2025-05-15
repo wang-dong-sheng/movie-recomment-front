@@ -46,7 +46,7 @@
           </tr>
         </table>
       </div>
-      
+
       <div class="button-group">
         <el-button type="primary" icon="el-icon-edit" @click="changeEdit">编辑资料</el-button>
         <el-button icon="el-icon-back" @click="toIndex">返回首页</el-button>
@@ -55,17 +55,17 @@
 
     <!-- 编辑模式 -->
     <el-card v-else class="edit-card">
-      <el-form 
-        :model="list" 
-        status-icon 
-        :rules="rules2" 
-        ref="list" 
-        label-width="100px" 
+      <el-form
+        :model="list"
+        status-icon
+        :rules="rules2"
+        ref="list"
+        label-width="100px"
         class="formWrap">
         <el-form-item label="昵称" prop="username">
           <el-input v-model="list.userNickname" placeholder="请输入昵称"></el-input>
         </el-form-item>
-        
+
         <el-form-item label="性别" prop="sex">
           <el-select v-model="list.sex" placeholder="请选择性别" style="width: 100%">
             <el-option label="男" value="男"></el-option>
@@ -76,13 +76,13 @@
         <el-form-item label="手机号" prop="phone">
           <el-input v-model="list.phone" placeholder="请输入手机号"></el-input>
         </el-form-item>
-        
+
         <el-form-item label="电影标签" prop="userTags">
           <div class="tags-edit">
             <el-checkbox-group v-model="userTags">
-              <el-checkbox 
-                v-for="op in tags" 
-                :key="op" 
+              <el-checkbox
+                v-for="op in tags"
+                :key="op"
                 :label="op"
                 class="tag-checkbox">
                 {{op}}
@@ -215,11 +215,11 @@
   .user-info-container {
     padding: 10px;
   }
-  
+
   .info-card, .edit-card {
     padding: 15px;
   }
-  
+
   .page-title {
     font-size: 24px;
   }
@@ -258,7 +258,7 @@ export default {
     };
   },
   mounted() {
-    
+
     // this.getUserTags();
   },
   watch: {

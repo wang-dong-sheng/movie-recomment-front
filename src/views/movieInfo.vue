@@ -8,79 +8,97 @@
       <el-card class="moviecard" style="height: 200px;">
         <img :src="movie.cover" class="avatar">
         <div class="introduce">
-          <p class="title">{{movie.name}}</p>
-          <p>标签：{{movie.tags}}</p>
-          <p>主演：{{movie.actors}}</p>
-          <p>评分：{{movie.score}}<span>|</span>投票数：{{movie.votes}}</p>
+          <p class="title">{{ movie.name }}</p>
+          <p>标签：{{ movie.tags }}</p>
+          <p>主演：{{ movie.actors }}</p>
+          <p>评分：{{ movie.score }}<span>|</span>投票数：{{ movie.votes }}</p>
         </div>
-        <el-button type="primary" v-if="movie.officialSite" class="moviebtn" @click="viewMovie(movie.officialSite)" plain>观看电影</el-button>
+        <el-button type="primary" v-if="movie.officialSite" class="moviebtn" @click="viewMovie(movie.officialSite)"
+                   plain>观看电影
+        </el-button>
         <el-button v-else class="moviebtn">无法观看，暂无资源</el-button>
       </el-card>
       <el-card class="moviecard">
         <div class="movieintroduce">电影简介</div>
         <div class="movieintroducet">
-          <p>导演：{{movie.directors}}</p>
-          <p>上映时间：{{movie.releaseDate}}<span>|</span>地区：{{movie.regions}}<span>|</span>语言：{{movie.languages}}</p>
-          <p>片长：{{movie.mins}} 分钟</p>
+          <p>导演：{{ movie.directors }}</p>
+          <p>
+            上映时间：{{ movie.releaseDate }}<span>|</span>地区：{{ movie.regions }}<span>|</span>语言：{{ movie.languages }}
+          </p>
+          <p>片长：{{ movie.mins }} 分钟</p>
         </div>
-      <div class="rating-container">
-        <div>
+        <div class="rating-container">
+          <div>
           <span v-if="!hasRated" v-for="n in 5" :key="n">
-            <el-button class="scorec" @click="submitRating(n)">{{n}}</el-button>
+            <el-button class="scorec" @click="submitRating(n)">{{ n }}</el-button>
             <span>&ensp;</span>
           </span>
-          <span v-if="hasRated">
+            <span v-if="hasRated">
             我的为给电影打：{{ currentRating }} 分
             <el-button type="primary" class="scorec" @click="showRatingButtons">重新评分</el-button>
           </span>
-          <el-button type="primary" v-if="!hasRated" class="combtn" plain>点击右侧为电影打分</el-button>
+            <el-button type="primary" v-if="!hasRated" class="combtn" plain>点击右侧为电影打分</el-button>
+          </div>
         </div>
-      </div>
       </el-card>
       <!-- 现有的电影内容卡片 -->
-            <el-card class="moviecard">
-              <div class="movieintroduce">电影内容</div>
-              <div class="moviecontent">
-                <p>{{movie.storyline}}</p>
-              </div>
-            </el-card>
+      <el-card class="moviecard">
+        <div class="movieintroduce">电影内容</div>
+        <div class="moviecontent">
+          <p>{{ movie.storyline }}</p>
+        </div>
+      </el-card>
 
-            <!-- 新增推荐卡片 -->
-            <!-- 将推荐卡片部分修改为 -->
-            <el-card class="moviecard"> <div class="movieintroduce">猜你喜欢</div> <div class="cardContainx"> <div class="wrapper-cardx"> <div class="card" v-for="(item, key) in recommendList" :key="key"> <meta name="referrer" content="no-referrer"/> <img :src="item.cover" class="image" @click="getMovieDetail(item.id)"> <div> <p style="white-space: pre-wrap;">{{item.name}}    </p> </div> </div> </div> </div> </el-card>
+      <!-- 新增推荐卡片 -->
+      <!-- 将推荐卡片部分修改为 -->
+      <el-card class="moviecard">
+        <div class="movieintroduce">猜你喜欢</div>
+        <div class="cardContainx">
+          <div class="wrapper-cardx">
+            <div class="card" v-for="(item, key) in recommendList" :key="key">
+              <meta name="referrer" content="no-referrer"/>
+              <img :src="item.cover" class="image" @click="getMovieDetail(item.movieId)">
+              <div><p style="white-space: pre-wrap;">{{ item.name }}    </p></div>
+            </div>
+          </div>
+        </div>
+      </el-card>
 
       <!-- 现有的评论卡片 -->
-            <el-card class="moviecard">
-              <div class="movieintroduce">电影评论</div>
-              <div class="newsContain">
-                <div class="temp">
-                  <!--        @click="personDetail(item.id)-->
-                  <el-input placeholder="登录后才可以评论哟~"  v-model="commentInput" maxlength="50" v-show="!isLogin" disabled type="textarea" autosize style="margin-top: 20px">
-                  </el-input>
-                  <el-input placeholder="请输入内容"  v-model="commentInput" maxlength="50" v-show="isLogin" type="textarea" autosize style="margin-top: 20px">
-                  </el-input>
-                  <el-button @click="postComment" class="combtn2" plain size="small">评论</el-button>
-                  <el-button @click="clearComment" class="combtn2" plain size="small">清除</el-button>
-                  <div class="newsItem" v-for="(item, key) in comment" :key="key">
-                    <div class="picContain" ontouchstart="this.classList.toggle('hover');">
-                      <meta name="referrer" content="no-referrer"/>
-                      <img :src=item.userAvatar height="75" width="75">
-                    </div>
-                    <div>
-                      <p style="white-space: pre-wrap; color: #66b1ff">用户：{{item.userName}}    赞同：{{item.votes}}     时间：{{item.commentTime}}</p>
-                      <p style="margin-top:25px">{{item.content}}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
+      <el-card class="moviecard">
+        <div class="movieintroduce">电影评论</div>
+        <div class="newsContain">
+          <div class="temp">
+            <!--        @click="personDetail(item.id)-->
+            <el-input placeholder="登录后才可以评论哟~" v-model="commentInput" maxlength="50" v-show="!isLogin" disabled
+                      type="textarea" autosize style="margin-top: 20px">
+            </el-input>
+            <el-input placeholder="请输入内容" v-model="commentInput" maxlength="50" v-show="isLogin" type="textarea"
+                      autosize style="margin-top: 20px">
+            </el-input>
+            <el-button @click="postComment" class="combtn2" plain size="small">评论</el-button>
+            <el-button @click="clearComment" class="combtn2" plain size="small">清除</el-button>
+            <div class="newsItem" v-for="(item, key) in comment" :key="key">
+              <!-- <div class="picContain" ontouchstart="this.classList.toggle('hover');">
+                <meta name="referrer" content="no-referrer"/>
+                <img :src=item.userAvatar height="75" width="75">
+              </div> -->
               <div>
-                <el-button class="editt" @click="prePage()">上一页</el-button>
-                <el-button type="primary" class="editt">{{this.count}}</el-button>
-                <el-button class="editt" >{{this.count+1}}</el-button>
-                <el-button class="editt" >{{this.count+2}}</el-button>
-                <el-button class="editt" @click="nextPage()">下一页</el-button>
+                <p style="white-space: pre-wrap; color: #66b1ff">用户：{{ item.userName || generateRandomString() }}
+                  赞同：{{ item.votes }} 时间：{{ formatDateTime(item.commentTime) }}</p>
+                <p style="margin-top:25px">{{ item.content }}</p>
               </div>
-            </el-card>
+            </div>
+          </div>
+        </div>
+        <div>
+          <el-button class="editt" @click="prePage()">上一页</el-button>
+          <el-button type="primary" class="editt">{{ this.count }}</el-button>
+          <el-button class="editt">{{ this.count + 1 }}</el-button>
+          <el-button class="editt">{{ this.count + 2 }}</el-button>
+          <el-button class="editt" @click="nextPage()">下一页</el-button>
+        </div>
+      </el-card>
     </div>
   </div>
 </template>
@@ -103,14 +121,60 @@ export default {
     };
   },
   mounted() {
-    this.getMovieDetail();
+    const movieId = localStorage.getItem('movieId');
+    this.getMovieDetail(movieId);
+
     this.getCommentDetail();
     this.checkExistingRating();
     this.getRecommendByMovieId(); // 添加获取推荐的调用
   },
-  computed: {
-  },
+  computed: {},
   methods: {
+    // 格式化日期时间
+    formatDateTime(time) {
+      if (!time) return '';
+      let date;
+
+      // 处理字符串形式的时间戳
+      if (typeof time === 'string' && /^\d+$/.test(time)) {
+        date = new Date(parseInt(time));
+      }
+      // 处理数字形式的时间戳
+      else if (typeof time === 'number') {
+        date = new Date(time);
+      }
+      // 处理普通日期字符串
+      else if (typeof time === 'string') {
+        date = new Date(time);
+      } else {
+        return time;
+      }
+
+      // 如果日期无效，返回原始值
+      if (isNaN(date.getTime())) {
+        return time;
+      }
+
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      const hours = String(date.getHours()).padStart(2, '0');
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+      const seconds = String(date.getSeconds()).padStart(2, '0');
+
+      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    },
+
+    // 生成随机字符串
+    generateRandomString() {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      const length = Math.floor(Math.random() * 3) + 4; // 生成4-6的随机长度
+      let result = '';
+      for (let i = 0; i < length; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return result;
+    },
     checkExistingRating() {
       const user = JSON.parse(localStorage.getItem('user'));
       if (!user) return;
@@ -120,18 +184,18 @@ export default {
         userId: user.userId,
         movieId: movieId
       })
-      .then(res => {
-        if (res.data && res.data.data && res.data.data.rating) {
-          this.hasRated = true;
-          this.currentRating = res.data.data.rating;
-        } else {
-          this.hasRated = false;
-          this.currentRating = null;
-        }
-      })
-      .catch(err => {
-        console.error('获取评分信息失败:', err);
-      });
+        .then(res => {
+          if (res.data && res.data.data && res.data.data.rating) {
+            this.hasRated = true;
+            this.currentRating = res.data.data.rating;
+          } else {
+            this.hasRated = false;
+            this.currentRating = null;
+          }
+        })
+        .catch(err => {
+          console.error('获取评分信息失败:', err);
+        });
     },
     submitRating(score) {
       const user = JSON.parse(localStorage.getItem('user'));
@@ -149,29 +213,29 @@ export default {
         userId: user.userId,
         rating: score
       })
-      .then(res => {
-        if (res.data.code === 0) {
-          this.hasRated = true;
-          this.currentRating = score;
+        .then(res => {
+          if (res.data.code === 0) {
+            this.hasRated = true;
+            this.currentRating = score;
+            this.$message({
+              message: '评分成功！',
+              type: 'success'
+            });
+            this.getMovieDetail();
+          } else {
+            this.$message({
+              message: res.msg || '评分失败，请稍后重试',
+              type: 'warning'
+            });
+          }
+        })
+        .catch(err => {
+          console.error('评分失败:', err);
           this.$message({
-            message: '评分成功！',
-            type: 'success'
+            message: '评分失败，请稍后重试',
+            type: 'error'
           });
-          this.getMovieDetail();
-        } else {
-          this.$message({
-            message: res.msg || '评分失败，请稍后重试',
-            type: 'warning'
-          });
-        }
-      })
-      .catch(err => {
-        console.error('评分失败:', err);
-        this.$message({
-          message: '评分失败，请稍后重试',
-          type: 'error'
         });
-      });
     },
     showRatingButtons() {
       this.hasRated = false;
@@ -187,21 +251,25 @@ export default {
       this.count = this.count + 1;
       this.getCommentDetail();
     },
-    getMovieDetail() {
-      const movieId = localStorage.getItem('movieId');
+    getMovieDetail(movieId) {
+      // alert(movieId);
+      localStorage.setItem('movieId',movieId);
       const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : " ";
 
       fetch
         .getMovieInfo({
-        movieId: movieId,
-        userId: user.userId,
-      })
+          movieId: movieId,
+          userId: user.userId,
+        })
         .then((res) => {
           if (res.status === 200) {
             if (res.data.data === null) {
               this.isShow = true;
             }
             this.movie = res.data.data;
+            this.getCommentDetail();
+            this.checkExistingRating();
+            this.getRecommendByMovieId(); // 添加获取推荐的调用
           }
         })
         .catch((e) => {
@@ -320,315 +388,316 @@ export default {
 
 
 <style>
-  * {
-    box-sizing: border-box;
-  }
+* {
+  box-sizing: border-box;
+}
 
-  body {
-    margin: 0;
-    padding: 0;
-  }
+body {
+  margin: 0;
+  padding: 0;
+}
 
-  div .moviecard {
-    width: 1000px;
-    margin: 20px auto auto auto;
-  }
+div .moviecard {
+  width: 1000px;
+  margin: 20px auto auto auto;
+}
 
-  .avatar {
-    float: left;
-    width: 126px;
-    height: 140px;
-  }
+.avatar {
+  float: left;
+  width: 126px;
+  height: 140px;
+}
 
-  .title {
-    font-size: 21px;
-  }
+.title {
+  font-size: 21px;
+}
 
-  .introduce {
-    margin-left: 140px;
-    height: 110px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
+.introduce {
+  margin-left: 140px;
+  height: 110px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
 
-  .movieintroducet {
-    /*margin-left: 0px;*/
-    margin: 15px auto 15px auto;
-    height: 110px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
+.movieintroducet {
+  /*margin-left: 0px;*/
+  margin: 15px auto 15px auto;
+  height: 110px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
 
-  .movieintroducet p {
-    margin: 5px;
-  }
+.movieintroducet p {
+  margin: 5px;
+}
 
-  .introduce p {
-    margin: 8px;
-  }
+.introduce p {
+  margin: 8px;
+}
 
-  p span {
-    margin: 14px;
-  }
+p span {
+  margin: 14px;
+}
 
-  .movieintroduce {
-    border-left: 5px solid #888;
-    text-align: left;
-    padding-left: 8px;
-  }
+.movieintroduce {
+  border-left: 5px solid #888;
+  text-align: left;
+  padding-left: 8px;
+}
 
-  .moviecontent {
-    height: 100px;
-    margin: 15px auto 15px auto;
-    text-align: left;
-  }
+.moviecontent {
+  height: 100px;
+  margin: 15px auto 15px auto;
+  text-align: left;
+}
 
 
-  .moviebtn {
-    float: right;
-    margin-bottom: 20px;
-  }
+.moviebtn {
+  float: right;
+  margin-bottom: 20px;
+}
 
-  .combtn {
-    float: left;
-    margin-bottom: 20px;
-  }
+.combtn {
+  float: left;
+  margin-bottom: 20px;
+}
 
-  .combtn2 {
-    float: left;
-    margin-top: 5px;
-    margin-bottom: 20px;
-  }
+.combtn2 {
+  float: left;
+  margin-top: 5px;
+  margin-bottom: 20px;
+}
 
-  .scorec {
-    margin: 0px auto auto 0px;
-  }
+.scorec {
+  margin: 0px auto auto 0px;
+}
 
-  .cardContain {
-    width: 100%;
-    height: 100%;
-    background: #fff;
-  }
+.cardContain {
+  width: 100%;
+  height: 100%;
+  background: #fff;
+}
 
-  .newsContain {
-    padding-top: 1px;
-    width: 100%;
-    height: 100%;
-    background: #fff;
-  }
+.newsContain {
+  padding-top: 1px;
+  width: 100%;
+  height: 100%;
+  background: #fff;
+}
 
-  .picContain {
-    margin-right: 10px;
-    perspective: 1000px;
-  }
+.picContain {
+  margin-right: 10px;
+  perspective: 1000px;
+}
 
-  .picContain:hover .flipper, .picContain.hover .flipper {
-    transform: rotateY(180deg);
-  }
+.picContain:hover .flipper, .picContain.hover .flipper {
+  transform: rotateY(180deg);
+}
 
-  .picContain, .itemPic, .back {
-    width: 80px;
-    height: 80px;
-  }
+.picContain, .itemPic, .back {
+  width: 80px;
+  height: 80px;
+}
 
-  .flipper {
-    transition: 0.6s;
-    transform-style: preserve-3d;
-    position: relative;
-  }
+.flipper {
+  transition: 0.6s;
+  transform-style: preserve-3d;
+  position: relative;
+}
 
-  .newsItem {
-    display: flex;
-    justify-content: flex-start;
-    width: 1000px;
-    margin: auto;
-    height: 114px;
-    text-align: left;
-    color: #5a5a5a;
-    font-weight: 500;
-    padding-top: 15px;
-    border-bottom: 1px solid #ededed;
-  }
+.newsItem {
+  display: flex;
+  justify-content: flex-start;
+  width: 1000px;
+  margin: auto;
+  height: 114px;
+  text-align: left;
+  color: #5a5a5a;
+  font-weight: 500;
+  padding-top: 15px;
+  border-bottom: 1px solid #ededed;
+}
 
-  .itemPic, .back {
-    position: absolute;
-    top: 0;
-    left: 0;
-    backface-visibility: hidden;
-    background: #cc0000;
-    text-align: center;
-    color: white;
-    font-weight: 500;
-    line-height: 80px;
-    white-space: nowrap;
-  }
+.itemPic, .back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  backface-visibility: hidden;
+  background: #cc0000;
+  text-align: center;
+  color: white;
+  font-weight: 500;
+  line-height: 80px;
+  white-space: nowrap;
+}
 
-  .itemPic {
-    z-index: 2;
-  }
+.itemPic {
+  z-index: 2;
+}
 
-  .back {
-    transform: rotateY(180deg);
-  }
+.back {
+  transform: rotateY(180deg);
+}
 
-  .footer {
-    width: 100%;
-    height: 100px;
-    background: black;
-    padding-top: 20px
-  }
+.footer {
+  width: 100%;
+  height: 100px;
+  background: black;
+  padding-top: 20px
+}
 
-  .footer a {
-    color: white;
-    text-decoration: none;
-  }
+.footer a {
+  color: white;
+  text-decoration: none;
+}
 
-  .aboutus {
-    width: 100%;
-    height: 500px;
-    background: url("https://ydschool-video.nosdn.127.net/158480509232652112_AaOXxSky.jpg") no-repeat;
-    background-size: 100% 100%;
-    filter: grayscale(70%);
-    opacity: 0.7;
-    color: white;
-    font-weight: 600;
-    padding-top: 60px;
-  }
+.aboutus {
+  width: 100%;
+  height: 500px;
+  background: url("https://ydschool-video.nosdn.127.net/158480509232652112_AaOXxSky.jpg") no-repeat;
+  background-size: 100% 100%;
+  filter: grayscale(70%);
+  opacity: 0.7;
+  color: white;
+  font-weight: 600;
+  padding-top: 60px;
+}
 
-  .aboutus p {
-    margin-top: 30px;
-    font-size: 18px;
-  }
+.aboutus p {
+  margin-top: 30px;
+  font-size: 18px;
+}
 
-  #aboutusInfo {
-    margin-top: 80px;
-    animation-delay: 1s
-  }
+#aboutusInfo {
+  margin-top: 80px;
+  animation-delay: 1s
+}
 
-  .cardBox {
-    position: relative;
-    width: 1200px;
-    margin: 20px auto 30px auto;
-    box-shadow: 0 10px 15px #888;
-    border-radius: 6px;
-  }
+.cardBox {
+  position: relative;
+  width: 1200px;
+  margin: 20px auto 30px auto;
+  box-shadow: 0 10px 15px #888;
+  border-radius: 6px;
+}
 
-  .wrapper-card {
-    width: 1200px;
-    height: 1000px;
-    margin: 30px auto auto auto;
-    padding-top: 30px;
-  }
+.wrapper-card {
+  width: 1200px;
+  height: 1000px;
+  margin: 30px auto auto auto;
+  padding-top: 30px;
+}
 
-  .wrapper-card .card {
-    color: #07111B;
-    font-size: 16px;
-    width: 230px;
-    height: 243px;
-    float: left;
-    margin: 30px;
-    border-radius: 6px;
-  }
+.wrapper-card .card {
+  color: #07111B;
+  font-size: 16px;
+  width: 230px;
+  height: 243px;
+  float: left;
+  margin: 30px;
+  border-radius: 6px;
+}
 
-  .wrapper-card .card:hover {
-    transform: translateY(-5px);
-    transition: 3ms;
-    box-shadow: 5px 5px 10px #888;
-  }
+.wrapper-card .card:hover {
+  transform: translateY(-5px);
+  transition: 3ms;
+  box-shadow: 5px 5px 10px #888;
+}
 
-  .wrapper-card .image {
-    border-radius: 6px 6px 0 0;
-    width: 100%;
-    height: 100%;
-    margin-bottom: 20px;
-    border-radius: 6px;
-  }
+.wrapper-card .image {
+  border-radius: 6px 6px 0 0;
+  width: 100%;
+  height: 100%;
+  margin-bottom: 20px;
+  border-radius: 6px;
+}
 
-  .boxImg {
-    width: 100%;
-    height: 100%;
-    border-radius: 6px;
-  }
+.boxImg {
+  width: 100%;
+  height: 100%;
+  border-radius: 6px;
+}
 
-  .divisionx {
-    width: 90%;
-    margin: 10px auto;
-    text-align: left;
-    padding-left: 10px;
-    color: #5a5a5a;
-  }
+.divisionx {
+  width: 90%;
+  margin: 10px auto;
+  text-align: left;
+  padding-left: 10px;
+  color: #5a5a5a;
+}
 
-  .footer img {
-    width: 25px;
-    height: 25px;
-    margin-right: 10px
-  }
+.footer img {
+  width: 25px;
+  height: 25px;
+  margin-right: 10px
+}
 
-  .footer span {
-    margin-right: 20px;
-  }
+.footer span {
+  margin-right: 20px;
+}
 
-  .recommandInfo p {
-    margin-bottom: 6px;
-  }
+.recommandInfo p {
+  margin-bottom: 6px;
+}
 
-  .el-progress__text {
-    font-size: 16px !important;
-    text-align: center !important;
-  }
+.el-progress__text {
+  font-size: 16px !important;
+  text-align: center !important;
+}
 
-  .el-carousel-item {
-    display: flex;
-    justify-content: space-around;
-  }
+.el-carousel-item {
+  display: flex;
+  justify-content: space-around;
+}
 
-  .el-carousel {
-    width: 1200px;
-    margin: 0 auto;
-  }
+.el-carousel {
+  width: 1200px;
+  margin: 0 auto;
+}
 
-  .mytable {
-    width: 100%;
-    height: 700px;
-  }
+.mytable {
+  width: 100%;
+  height: 700px;
+}
 
-  .progress2 {
-    width: 182px;
-    border: 0;
-  }
+.progress2 {
+  width: 182px;
+  border: 0;
+}
 
-  .editt {
-    margin: 0px auto auto 0px;
-  }
+.editt {
+  margin: 0px auto auto 0px;
+}
 
-  .rating-container {
-    margin: 20px 0;
-  }
+.rating-container {
+  margin: 20px 0;
+}
 
-  .rating-buttons {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 15px;
-  }
+.rating-buttons {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 15px;
+}
 
-  .current-rating {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-  }
+.current-rating {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
 
-  .rating-text {
-    font-size: 16px;
-    color: #409EFF;
-    font-weight: bold;
-  }
+.rating-text {
+  font-size: 16px;
+  color: #409EFF;
+  font-weight: bold;
+}
 
-  .scorec {
-    min-width: 40px;
-  }
-  .cardContainx {
+.scorec {
+  min-width: 40px;
+}
+
+.cardContainx {
   width: 100%;
   height: 30%;
   background: #fff;

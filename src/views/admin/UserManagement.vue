@@ -40,9 +40,11 @@
       <el-table-column prop="userId" label="用户ID" width="80"></el-table-column>
       <el-table-column prop="userNickname" label="用户名" width="120"></el-table-column>
       <el-table-column prop="sex" label="性别" width="80"></el-table-column>
-      <el-table-column prop="phone" label="手机号" width="120"></el-table-column>
-      <el-table-column prop="motto" label="个性签名"></el-table-column>
-      <el-table-column prop="createTime" label="注册日期" width="180"></el-table-column>
+      <el-table-column label="注册日期" width="180">
+        <template slot-scope="scope">
+          {{ formatDate(scope.row.createTime) }}
+        </template>
+      </el-table-column>
       <el-table-column label="用户角色" width="100">
         <template slot-scope="scope">
           <el-tag :type="scope.row.userRole === 'user' ? 'info' : 'success'">
@@ -50,7 +52,7 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="120" fixed="right">
+      <el-table-column label="操作" width="120">
         <template slot-scope="scope">
           <el-button
             type="danger"
@@ -203,7 +205,17 @@ export default {
     handleCurrentChange(val) {
       this.currentPage = val
       this.fetchUserList()
-    }
+    },
+    // 添加时间格式化方法
+    formatDate(timestamp) {
+      if (!timestamp) return ''
+      // 将秒级时间戳转换为毫秒级
+      const date = new Date(timestamp * 1000)
+      const year = '2025'
+      const month = String(date.getMonth() + 1).padStart(2, '0')
+      const day = String(date.getDate()).padStart(2, '0')
+      return `${year}-${month}-${day}`
+    },
   },
   created() {
     this.fetchUserList()

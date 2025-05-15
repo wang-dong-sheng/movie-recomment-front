@@ -4,7 +4,7 @@
     <div class="search-area">
       <el-form :inline="true" :model="searchForm">
         <el-form-item label="评论ID">
-          <el-input v-model="searchForm.commentId" placeholder="请输入评论ID"></el-input>
+          <el-input v-model="searchForm._id" placeholder="请输入评论ID"></el-input>
         </el-form-item>
         <el-form-item label="用户名">
           <el-input v-model="searchForm.userName" placeholder="请输入用户名"></el-input>
@@ -34,13 +34,13 @@
     </div>
 
     <!-- 表格区域 -->
-    <el-table 
-      :data="commentList" 
-      border 
+    <el-table
+      :data="commentList"
+      border
       style="width: 100%"
       @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column prop="id" label="评论ID" width="80"></el-table-column>
+      <el-table-column prop="_id" label="评论ID" width="80"></el-table-column>
       <el-table-column prop="userName" label="用户名" width="120"></el-table-column>
       <el-table-column prop="movieName" label="电影名称" width="150"></el-table-column>
       <el-table-column prop="content" label="评论内容">
@@ -64,21 +64,19 @@
           {{ scope.row.commentTime | formatDate }}
         </template>
       </el-table-column>
-      <el-table-column label="状态" width="100">
+      <el-table-column label="点赞" width="100">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.status === 1 ? 'success' : 'danger'">
-            {{scope.row.status === 1 ? '正常' : '已隐藏'}}
-          </el-tag>
+            {{scope.row.votes}}
         </template>
       </el-table-column>
       <el-table-column label="操作" width="150" fixed="right">
         <template slot-scope="scope">
-          <el-button
+          <!-- <el-button
             :type="scope.row.status === 1 ? 'warning' : 'success'"
             size="mini"
             @click="handleToggleStatus(scope.row)">
             {{scope.row.status === 1 ? '隐藏' : '显示'}}
-          </el-button>
+          </el-button> -->
           <el-button
             type="danger"
             size="mini"
@@ -115,7 +113,8 @@ export default {
         commentId: '',
         userName: '',
         movieName: '',
-        dateRange: []
+        dateRange: [],
+        _id: ''
       },
       commentList: [],
       current: 0,
@@ -134,7 +133,11 @@ export default {
     },
     formatDate(value) {
       if (!value) return '';
-      return value.split('T')[0]; // 将 ISO 格式的日期分割，只保留年月日部分
+      const date = new Date(value);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
     }
   },
   methods: {
@@ -200,7 +203,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        fetch.deleteComments([row.id]).then(res => {
+        fetch.deleteComments([row._id]).then(res => {
           if (res.data.code === 0) {
             this.$message.success('删除成功');
             this.fetchCommentList();
@@ -228,7 +231,8 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        const commentIds = this.selectedComments.map(comment => comment.id);
+        // 修改这里：使用 _id 而不是 id
+        const commentIds = this.selectedComments.map(comment => comment._id);
         fetch.deleteComments(commentIds).then(res => {
           if (res.data.code === 0) {
             this.$message.success('批量删除成功');

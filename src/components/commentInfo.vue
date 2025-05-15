@@ -4,7 +4,7 @@
       <img src="http://www.pqdong.com/wp-content/uploads/2020/03/tip-img.png">
       <p>啊哦，你还没有留下过评论！</p>
     </el-card>
-    
+
     <el-card v-if="isShow" class="comment-card">
       <div class="card-header">
         <div class="title">
@@ -14,15 +14,15 @@
       </div>
 
       <!-- 评论列表 -->
-      <el-table 
-        :data="comment" 
-        border 
+      <el-table
+        :data="comment"
+        border
         style="width: 100%"
         class="comment-table">
         <el-table-column prop="movieName" label="电影名称" width="200">
           <template slot-scope="scope">
-            <span 
-              style="color: #409EFF; cursor: pointer" 
+            <span
+              style="color: #409EFF; cursor: pointer"
               @click="getMovieDetail(scope.row.movieId)">
               {{ scope.row.movieName }}
             </span>
@@ -45,7 +45,7 @@
             {{ formatCommentTime(scope.row.commentTime) }}
           </template>
         </el-table-column>
-        
+
         <!-- 新增操作列 -->
         <el-table-column label="操作" width="100" align="center">
           <template slot-scope="scope">
@@ -138,7 +138,7 @@ export default {
       localStorage.setItem('movieId', id);
       this.$router.push({ name: 'movieInfo' });
     },
-    
+
     // 添加删除评论方法
     handleDelete(row) {
       this.$confirm('确认删除该评论?', '提示', {
@@ -146,7 +146,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        fetch.deleteComments([row.id]).then(res => {
+        fetch.deleteComments([row._id]).then(res => {
           if (res.data.code === 0) {
             this.$message.success('删除成功');
             this.getCommentDetail(); // 重新加载评论列表

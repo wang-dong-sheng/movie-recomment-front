@@ -8,8 +8,8 @@
       >
         <!-- Logo区域 -->
         <div class="logo-container">
-          <img src="@/assets/logo.png" alt="" class="logo-img"/>
-          <span class="logo-text" v-show="!isCollapse">推荐系统</span>
+          <!-- <img src="@/assets/logo.png" alt="" class="logo-img"/> -->
+          <span class="logo-text" v-show="!isCollapse">推荐管理系统</span>
         </div>
 
         <!-- 菜单区域 -->
@@ -34,8 +34,8 @@
               <span>信息管理</span>
             </template>
             <el-menu-item index="/admin/user-management">用户管理</el-menu-item>
-            <el-menu-item index="/admin/user-info">用户信息</el-menu-item>
-            <el-menu-item index="/admin/admin-info">管理员信息</el-menu-item>
+            <el-menu-item index="/admin/user-info">可视化分析</el-menu-item>
+            <!-- 删除管理员信息菜单项 -->
             <el-menu-item index="/admin/comment-management">
               <i class="el-icon-chat-line-square"></i>
               <span>评论管理</span>
@@ -69,8 +69,8 @@
           <div class="header-right">
             <el-dropdown>
               <span class="user-info">
-                <img :src="userAvatar" class="user-avatar"/>
-                <span class="username">{{ user.username }}</span>
+                <!-- <img :src="" class="user-avatar"/> -->
+                <span class="username">{{ user.userNickname }}</span>
               </span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item @click.native="goToUserInfo" class="tab">个人信息</el-dropdown-item>
